@@ -14,6 +14,15 @@ The table below provides an overview of known functions affected by prototype
 pollution in the JavaScript language, or _gadgets_. This list is not exhaustive
 both in terms of affected APIs and usable properties.
 
+We indicate what kind of pollution is required to use the gadgets. This helps
+indicate how easy it is to exploit a given gadget because data only attacks are
+easier in practice.
+
+- `1`: _Data_ - Gadget that work when polluting with data only.
+- `2`: _Function_ - Gadget that require polluting with a function.
+- `3`: _Function/DoS_ - Gadget that require polluting with a function, but
+  polluting with a value will cause an exception.
+
 We try to categorize the gadgets into types. These types are very subjective and
 mostly try to give an indication of how problematic the gadget is in terms of
 language design.
@@ -27,32 +36,33 @@ language design.
 All gadgets were tested on Node.js v22.1.0, Deno v1.37.2, Chromium v124, and
 Firefox v126.0.
 
-| API                           | Prop(s)                             | Type | Node.js | Deno | Chromium      | Firefox       |
-| ----------------------------- | ----------------------------------- | ---- | ------- | ---- | ------------- | ------------- |
-| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `[[ToPrimitive]]`             | [`toString`][o0002]                 | `1`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`valueOf`][o0003]                  | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `2`  | Yes     | Yes  | Yes           | No            |
-| `Function.prototype.apply`    | [`<n>`][o0005]                      | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Iterator`                    | [`next`][o0006]                     | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.defineProperty`       | [`configurable`][o0007]             | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`enumerable`][o0008]               | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`get`][o0009]                      | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`set`][o0010]                      | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`value`][o0011]                    | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`writable`][o0012]                 | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.entries`              | [`enumerable`][o0013]               | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.fromEntries`          | [`0,1`][o0014]                      | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.keys`                 | [`enumerable`][o0015]               | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.values`               | [`enumerable`][o0016]               | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.apply`               | [`<n>`][o0017]                      | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.construct`           | [`<n>`][o0018]                      | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `2`  | Yes     | Yes  | _Unsupported_ | _Unsupported_ |
-| `String.prototype.endsWith`   | [`@@match`][o0020]                  | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.includes`   | [`@@match`][o0021]                  | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.startsWith` | [`@@match`][o0024]                  | `2`  | Yes     | Yes  | Yes           | Yes           |
+| API                           | Prop(s)                             | Level | Type | Node.js | Deno | Chromium      | Firefox       |
+| ----------------------------- | ----------------------------------- | ----- | ---- | ------- | ---- | ------------- | ------------- |
+| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
+| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | No            |
+| `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Iterator`                    | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`get`][o0009]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`set`][o0010]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`value`][o0011]                    | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`writable`][o0012]                 | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes  | _Unsupported_ | _Unsupported_ |
+| `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| `String.prototype.startsWith` | [`@@match`][o0024]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
@@ -78,6 +88,7 @@ Firefox v126.0.
 [o0022]: ./pocs/StringPrototypeMatchAll-@@match,@@matchAll,flag.PoC.js
 [o0023]: ./pocs/StringPrototypeReplaceAll-@@match,@@replace,flag.PoC.js
 [o0024]: ./pocs/StringPrototypeStartsWith-@@match.PoC.js
+[o0025]: ./pocs/JSONStringify-toJSON.PoC.js
 
 ## Unaffected
 

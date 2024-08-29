@@ -48,7 +48,7 @@ const after = f.apply(thisArg, args);
 if (after === "foobar") {
 	console.log("Success");
 } else if (after === before) {
-	t.failure("output did not change");
+	throw new Error("output did not change");
 } else {
 	throw new Error("pollution did not work as expected");
 }
