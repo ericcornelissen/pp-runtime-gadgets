@@ -5,7 +5,7 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec](https://tc39.es/ecma262), currently at `Get(` 18/158.
+- Continue in the [spec](https://tc39.es/ecma262), currently at `Get(` 38/160.
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
 
 ## Overview
@@ -43,7 +43,9 @@ Firefox v126.0.
 |                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | No            |
 | `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Iterator`                    | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | TBD  | TBD           | TBD           |
 | `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
@@ -54,9 +56,16 @@ Firefox v126.0.
 | `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | TBD  | TBD           | TBD           |
 | `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
+| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
 | `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes  | _Unsupported_ | _Unsupported_ |
 | `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 | `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
@@ -89,19 +98,48 @@ Firefox v126.0.
 [o0023]: ./pocs/StringPrototypeReplaceAll-@@match,@@replace,flag.PoC.js
 [o0024]: ./pocs/StringPrototypeStartsWith-@@match.PoC.js
 [o0025]: ./pocs/JSONStringify-toJSON.PoC.js
+[o0026]: ./pocs/ReflectDefineProperty-configurable.PoC.js
+[o0027]: ./pocs/ReflectDefineProperty-enumerable.PoC.js
+[o0028]: ./pocs/ReflectDefineProperty-get.PoC.js
+[o0029]: ./pocs/ReflectDefineProperty-set.PoC.js
+[o0030]: ./pocs/ReflectDefineProperty-value.PoC.js
+[o0031]: ./pocs/ReflectDefineProperty-writable.PoC.js
+[o0032]: ./pocs/Iterator-done.PoC.js
+[o0033]: ./pocs/Iterator-value.PoC.js
+[o0034]: ./pocs/ObjectToString-@@toStringTag.PoC.js
 
 ## Unaffected
 
 The table below lists evaluated sections in the ECMAScript spec which were
 deemed unaffected by prototype pollution.
 
-| API                            | Property    | Reason                                                                                                    |
-| ------------------------------ | ----------- | --------------------------------------------------------------------------------------------------------- |
-| [`CopyDataProperties`][i0001]  | `<key>`     | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                   |
-| [`OrdinaryHasInstance`][i0002] | `prototype` | Object on which lookup should happen must be a callable, which means it must have a `prototype` property. |
+| API                                    | Property       | Reason                                                                                                              |
+| -------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------- |
+| [`CopyDataProperties`][i0001]          | `<key>`        | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
+| [`OrdinaryHasInstance`][i0002]         | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`HasBinding`][i0003]                  | `@@unscopable` | _Not evaluated_                                                                                                     |
+|                                        | `<N>`          | _Not evaluated_                                                                                                     |
+| [`GetBindingValue`][i0004]             | `<N>`          | Checks `HasProperty` before `Get`.                                                                                  |
+| [`GetPrototypeFromConstructor`][i0005] | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`ArraySpeciesCreate`][i0006]          | `constructor`  | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
+|                                        | `@@species`    | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
+| [`[[GetOwnProperty]]`][i0007]          | `<P>`          | _Not evaluated_                                                                                                     |
+| [`[[DefineOwnProperty]]`][i0008]       | `<P>`          | _Not evaluated_                                                                                                     |
+| [`[[Get]]`][i0009]                     | `<P>`          | _Not evaluated_                                                                                                     |
+| [`Object.assign`][i0010]               | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`ObjectDefineProperties`][i0011]      | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
 [i0002]: https://tc39.es/ecma262/#sec-ordinaryhasinstance
+[i0003]: https://tc39.es/ecma262/#sec-object-environment-records-hasbinding-n
+[i0004]: https://tc39.es/ecma262/#sec-object-environment-records-getbindingvalue-n-s
+[i0005]: https://tc39.es/ecma262/#sec-getprototypefromconstructor
+[i0006]: https://tc39.es/ecma262/#sec-arrayspeciescreate
+[i0007]: https://tc39.es/ecma262/#sec-arguments-exotic-objects-getownproperty-p
+[i0008]: https://tc39.es/ecma262/#sec-arguments-exotic-objects-defineownproperty-p-desc
+[i0009]: https://tc39.es/ecma262/#sec-arguments-exotic-objects-get-p-receiver
+[i0010]: https://tc39.es/ecma262/#sec-object.assign
+[i0011]: https://tc39.es/ecma262/#sec-objectdefineproperties
 
 ## Approach
 

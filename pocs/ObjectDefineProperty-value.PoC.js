@@ -9,7 +9,8 @@ Notes:
 - This is a known gadget and is mentioned on MDN.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-topropertydescriptor
+1. https://tc39.es/ecma262/#sec-object.defineproperty
+2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
 (function () {

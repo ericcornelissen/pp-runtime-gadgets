@@ -1,15 +1,12 @@
 /*
 Explanation:
-The `Object.defineProperty` API accepts a descriptor object for the property
+The `Reflect.defineProperty` API accepts a descriptor object for the property
 being defined. Since this is a regular JavaScript object, any properties not
 explicitly specified will be looked up in the prototype. Hence, any property,
-including `configurable` can be polluted to affect newly defined properties.
-
-Notes:
-- This is a known gadget and is mentioned on MDN.
+including `writable` can be polluted to affect newly defined properties.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-object.defineproperty
+1. https://tc39.es/ecma262/#sec-reflect.defineproperty
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
@@ -26,29 +23,35 @@ const p = "foobar";
 // -----------------------------------------------------------------------------
 
 const beforeO = {};
-Object.defineProperty(beforeO, p, { value: 42 });
+Reflect.defineProperty(beforeO, p, { value: 42 });
 
-const beforeD = Object.getOwnPropertyDescriptor(beforeO, p);
-if (beforeD.configurable) {
-	throw new Error("configurable by default");
+try {
+	beforeO[p] = 43;
+} catch (_) { }
+
+if (beforeO[p] === 43) {
+	throw new Error("writable by default");
 }
 
 // -----------------------------------------------------------------------------
 // --- POLLUTED ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-Object.prototype.configurable = true;
+Object.prototype.writable = true;
 
 const afterO = {};
-Object.defineProperty(afterO, p, { value: 42 });
+Reflect.defineProperty(afterO, p, { value: 42 });
 
-const afterD = Object.getOwnPropertyDescriptor(afterO, p);
-if (afterD.configurable) {
+delete Object.prototype.writable;
+
+try {
+	afterO[p] = 43;
+} catch (_) { }
+
+if (afterO[p] === 43) {
 	console.log("Success");
 } else {
 	throw new Error("Failed");
 }
-
-delete Object.prototype.configurable;
 
 })();

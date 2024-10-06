@@ -1,15 +1,12 @@
 /*
 Explanation:
-The `Object.defineProperty` API accepts a descriptor object for the property
+The `Reflect.defineProperty` API accepts a descriptor object for the property
 being defined. Since this is a regular JavaScript object, any properties not
 explicitly specified will be looked up in the prototype. Hence, any property,
-including `configurable` can be polluted to affect newly defined properties.
-
-Notes:
-- This is a known gadget and is mentioned on MDN.
+including `set` can be polluted to affect newly defined properties.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-object.defineproperty
+1. https://tc39.es/ecma262/#sec-reflect.defineproperty
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
@@ -20,35 +17,30 @@ Specification:
 // -----------------------------------------------------------------------------
 
 const p = "foobar";
+let value = 1;
 
 // -----------------------------------------------------------------------------
 // --- ORIGINAL ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const beforeO = {};
-Object.defineProperty(beforeO, p, { value: 42 });
-
-const beforeD = Object.getOwnPropertyDescriptor(beforeO, p);
-if (beforeD.configurable) {
-	throw new Error("configurable by default");
-}
+// n/a
 
 // -----------------------------------------------------------------------------
 // --- POLLUTED ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-Object.prototype.configurable = true;
+Object.prototype.set = () => {value = 42};
 
 const afterO = {};
-Object.defineProperty(afterO, p, { value: 42 });
+Reflect.defineProperty(afterO, p, { get: () => value });
 
-const afterD = Object.getOwnPropertyDescriptor(afterO, p);
-if (afterD.configurable) {
+afterO[p] = 2;
+if (afterO[p] === 42) {
 	console.log("Success");
 } else {
 	throw new Error("Failed");
 }
 
-delete Object.prototype.configurable;
+delete Object.prototype.set;
 
 })();

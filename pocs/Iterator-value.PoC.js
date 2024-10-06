@@ -1,16 +1,12 @@
 /*
 Explanation:
-The `Object.defineProperty` API accepts a descriptor object for the property
-being defined. Since this is a regular JavaScript object, any properties not
-explicitly specified will be looked up in the prototype. Hence, any property,
-including `get` can be polluted to affect newly defined properties.
-
-Notes:
-- This is a known gadget and is mentioned on MDN.
+Any functionality operating on iterators assumes iterators are implemented
+correctly, i.e. the `next` function returns objects with a `value` and `done`
+key. If an operator fails to do so, the `value` property may be looked up in the
+hierarchy instead.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-object.defineproperty
-2. https://tc39.es/ecma262/#sec-topropertydescriptor
+1. https://tc39.es/ecma262/#sec-iteratorvalue
 */
 
 (function () {
@@ -19,34 +15,41 @@ Specification:
 // --- SETUP -------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const p = "foobar";
+const value = "foobar";
+const subject = {
+	[Symbol.iterator]() {
+		let done = true;
+		return {
+			next() {
+				done = !done;
+				return { done };
+			},
+		};
+	}
+};
 
 // -----------------------------------------------------------------------------
 // --- ORIGINAL ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const beforeO = {};
-Object.defineProperty(beforeO, p, {});
-
-if (beforeO[p] !== undefined) {
-	throw new Error("has a value by default");
+const before = Array.from(subject);
+if (before.length !== 1 && before[0] !== undefined) {
+	throw new Error("unexpected behavior before pollution");
 }
 
 // -----------------------------------------------------------------------------
 // --- POLLUTED ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-Object.prototype.get = () => 42;
+Object.prototype.value = value;
 
-const afterO = {};
-Object.defineProperty(afterO, p, { });
+const after = Array.from(subject);
+delete Object.prototype.value;
 
-if (afterO[p] === 42) {
+if (after.length === 1 && after[0] === value) {
 	console.log("Success");
 } else {
-	throw new Error("Failed");
+	throw new Error("Failure");
 }
-
-delete Object.prototype.get;
 
 })();

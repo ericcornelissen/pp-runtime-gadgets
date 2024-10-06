@@ -1,16 +1,12 @@
 /*
 Explanation:
-The `Object.defineProperty` API accepts a descriptor object for the property
-being defined. Since this is a regular JavaScript object, any properties not
-explicitly specified will be looked up in the prototype. Hence, any property,
-including `get` can be polluted to affect newly defined properties.
-
-Notes:
-- This is a known gadget and is mentioned on MDN.
+Any functionality operating on iterators assumes iterators are implemented
+correctly, i.e. the `next` function returns objects with a `value` and `done`
+key. If an operator fails to do so, the `done` property may be looked up in the
+hierarchy instead.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-object.defineproperty
-2. https://tc39.es/ecma262/#sec-topropertydescriptor
+1. https://tc39.es/ecma262/#sec-iteratorcomplete
 */
 
 (function () {
@@ -19,34 +15,35 @@ Specification:
 // --- SETUP -------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const p = "foobar";
+const subject = {
+	[Symbol.iterator]() {
+		return {
+			next() {
+				return { value: "foobar" };
+			},
+		};
+	}
+};
 
 // -----------------------------------------------------------------------------
 // --- ORIGINAL ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const beforeO = {};
-Object.defineProperty(beforeO, p, {});
-
-if (beforeO[p] !== undefined) {
-	throw new Error("has a value by default");
-}
+// n/a
 
 // -----------------------------------------------------------------------------
 // --- POLLUTED ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-Object.prototype.get = () => 42;
+Object.prototype.done = true;
 
-const afterO = {};
-Object.defineProperty(afterO, p, { });
-
-if (afterO[p] === 42) {
+const list = Array.from(subject);
+if (list.length === 0) {
 	console.log("Success");
 } else {
-	throw new Error("Failed");
+	throw new Error("Failure");
 }
 
-delete Object.prototype.get;
+delete Object.prototype.done;
 
 })();

@@ -1,16 +1,11 @@
 /*
 Explanation:
-The `Object.defineProperty` API accepts a descriptor object for the property
-being defined. Since this is a regular JavaScript object, any properties not
-explicitly specified will be looked up in the prototype. Hence, any property,
-including `get` can be polluted to affect newly defined properties.
-
-Notes:
-- This is a known gadget and is mentioned on MDN.
+When converting an object to a string it will produce a string like "[object X]"
+where X depends on the type of object. If @@toStringTag is set to a string it
+replaces whatever X would have been.
 
 Specification:
-1. https://tc39.es/ecma262/#sec-object.defineproperty
-2. https://tc39.es/ecma262/#sec-topropertydescriptor
+1. https://tc39.es/ecma262/#sec-object.prototype.tostring
 */
 
 (function () {
@@ -19,34 +14,30 @@ Specification:
 // --- SETUP -------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const p = "foobar";
+const tag = "foobar";
 
 // -----------------------------------------------------------------------------
 // --- ORIGINAL ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const beforeO = {};
-Object.defineProperty(beforeO, p, {});
-
-if (beforeO[p] !== undefined) {
-	throw new Error("has a value by default");
+const before = {}.toString();
+if (before !== "[object Object]") {
+	throw new Error("unexpected behavior before pollution");
 }
 
 // -----------------------------------------------------------------------------
 // --- POLLUTED ----------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-Object.prototype.get = () => 42;
+Object.prototype[Symbol.toStringTag] = tag;
 
-const afterO = {};
-Object.defineProperty(afterO, p, { });
-
-if (afterO[p] === 42) {
+const after = {}.toString();
+if (after === `[object ${tag}]`) {
 	console.log("Success");
 } else {
 	throw new Error("Failed");
 }
 
-delete Object.prototype.get;
+delete Object.prototype[Symbol.toStringTag];
 
 })();
