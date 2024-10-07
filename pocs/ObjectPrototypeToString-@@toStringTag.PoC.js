@@ -8,36 +8,34 @@ Specification:
 1. https://tc39.es/ecma262/#sec-object.prototype.tostring
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
 const tag = "foobar";
+const subject = {};
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.prototype.toString",
+	properties: ["@@toStringTag"],
+};
 
-const before = {}.toString();
-if (before !== "[object Object]") {
-	throw new Error("unexpected behavior before pollution");
+export function prerequisite() {
+	const got = subject.toString();
+	if (got === "[object Object]") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype[Symbol.toStringTag] = tag;
 
-Object.prototype[Symbol.toStringTag] = tag;
-
-const after = {}.toString();
-if (after === `[object ${tag}]`) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const got = subject.toString();
+	if (got === `[object ${tag}]`) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype[Symbol.toStringTag];
-
-})();
+export function cleanup() {
+	delete Object.prototype[Symbol.toStringTag];
+}

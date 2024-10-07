@@ -15,12 +15,6 @@ Specification:
 2. https://tc39.es/ecma262/#sec-proxy-object-internal-methods-and-internal-slots-ownpropertykeys
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
 const subject = new Proxy({}, {
 	ownKeys() {
 		return {
@@ -30,38 +24,37 @@ const subject = new Proxy({}, {
 	}
 });
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "[[OwnPropertyKeys]]",
+	properties: ["<n>"],
+};
 
-let threw = false;
-try {
-	Reflect.ownKeys(subject);
-} catch (_) {
-	threw = true;
+export function prerequisite() {
+	try {
+		const got = Reflect.ownKeys(subject);
+		return [false, `got ${got}`];
+	} catch (_) {
+		return [true, null];
+	}
 }
 
-if (!threw) {
-	throw new Error("no error thrown before pollution");
+export function test() {
+	Object.prototype[1] = "bar";
+
+	const got = Reflect.ownKeys(subject);
+	if (
+		got.length === 2
+		&&
+		got[0] === "foo"
+		&&
+		got[1] === "bar"
+	) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype[1] = "bar";
-
-const ownKeys = Reflect.ownKeys(subject);
-if (ownKeys[0] !== "foo") {
-	throw new Error(`unexpected value for expected key (got '${ownKeys[0]}')`);
+export function cleanup() {
+	delete Object.prototype[1];
 }
-
-if (ownKeys[1] === "bar") {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
-}
-
-delete Object.prototype[1];
-
-})();

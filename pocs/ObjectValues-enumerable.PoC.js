@@ -11,13 +11,11 @@ Specification:
 1. https://tc39.es/ecma262/#sec-object.values
 */
 
-(function () {
+const value = "bar";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const subject = new Proxy({ foo: "bar" }, {
+const subject = new Proxy({
+	foo: value,
+}, {
 	getOwnPropertyDescriptor() {
 		return {
 			configurable: true
@@ -25,30 +23,31 @@ const subject = new Proxy({ foo: "bar" }, {
 	}
 });
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.values",
+	properties: ["'enumerable'"],
+};
 
-const before = Object.values(subject);
-if (before.length !== 0) {
-	throw new Error("unexpected behavior before pollution");
+export function prerequisite() {
+	const got = Object.values(subject);
+	if (got.length === 0) {
+		return [true, null];
+	} else {
+		return [false, `got [${got.join(",")}]`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.enumerable = true;
 
-Object.prototype.enumerable = true;
-
-const after = Object.values(subject);
-if (after.length === 1) {
-	console.log("Success");
-} else if (after.length === before.length) {
-	throw new Error("Failed");
-} else {
-	throw new Error("Unexpected effect");
+	const got = Object.values(subject);
+	if (got.length === 1 && got[0] === value) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype.enumerable;
-
-})();
+export function cleanup() {
+	delete Object.prototype.enumerable;
+}

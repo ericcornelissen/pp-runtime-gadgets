@@ -9,30 +9,39 @@ Specification:
 2. https://tc39.es/ecma262/#sec-toprimitive
 */
 
-(function() {
+const valueOfBackup = Object.prototype.valueOf;
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+const value = 42;
 
-const before = (+{});
-if (!isNaN(before)) {
-	throw new Error(`unexpected behavior before pollution (got '${before}')`);
+export const about = {
+	function: "[[ToPrimitive]]",
+	properties: ["'valueOf'"],
+};
+
+export function prerequisite() {
+	try {
+		const got = (+{});
+		if (isNaN(got)) {
+			return [true, null];
+		} else {
+			return [false, `got ${got}`];
+		}
+	} catch (_) {
+		return [true, null];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.valueOf = () => value;
 
-Object.prototype.valueOf = () => 42;
-
-const after = (+{});
-if (after === 42) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const got = (+{});
+	if (got === value) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype.toValue;
-
-})();
+export function cleanup() {
+	Object.prototype.valueOf = valueOfBackup;
+}

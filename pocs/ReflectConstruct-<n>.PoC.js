@@ -14,12 +14,7 @@ Specification:
 2. https://tc39.es/ecma262/#sec-reflect.construct
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
+const value = "bar";
 const args = {
 	length: 2,
 	0: "foo",
@@ -30,30 +25,31 @@ function c(x, y) {
 	this.y = y;
 }
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Reflect.construct",
+	properties: ["<n>"],
+};
 
-const before = Reflect.construct(c, args);
-if (before.y !== undefined) {
-	throw new Error("wrong result before pollution");
+export function prerequisite() {
+	const got = Reflect.construct(c, args);
+	if (got.y === undefined) {
+		return [true, null];
+	} else {
+		return [false, `got ${got.y}`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype[1] = value;
 
-Object.prototype[1] = "bar";
-
-const after = Reflect.construct(c, args);
-if (after.y === "bar") {
-	console.log("Success");
-} else if (after.y === undefined) {
-	throw new Error("Failed");
-} else {
-	throw new Error("Pollution did not work as expected");
+	const after = Reflect.construct(c, args);
+	if (after.y === value) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype[1];
-
-})();
+export function cleanup() {
+	delete Object.prototype[1];
+}

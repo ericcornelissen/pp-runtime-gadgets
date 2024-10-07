@@ -10,37 +10,40 @@ Specification:
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
-(function () {
+const propertyName = "foo";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Reflect.defineProperty",
+	properties: ["'set'"],
+};
 
-const p = "foobar";
-let value = 1;
+export function prerequisite() {
+	const object = {};
+	Reflect.defineProperty(object, propertyName, { get: () => { } });
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-// n/a
-
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype.set = () => {value = 42};
-
-const afterO = {};
-Reflect.defineProperty(afterO, p, { get: () => value });
-
-afterO[p] = 2;
-if (afterO[p] === 42) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	try {
+		object[propertyName] = 2;
+		return [false, `unexpected non-throw`];
+	} catch (_) {
+		return [true, null];
+	}
 }
 
-delete Object.prototype.set;
+export function test() {
+	let flag = false;
+	Object.prototype.set = () => { flag = true; };
 
-})();
+	const object = {};
+	Reflect.defineProperty(object, propertyName, { get: () => { } });
+
+	object[propertyName] = "anything";
+	if (flag) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype.set;
+}

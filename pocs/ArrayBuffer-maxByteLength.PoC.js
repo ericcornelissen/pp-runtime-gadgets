@@ -9,50 +9,39 @@ Specification:
 2. https://tc39.es/ecma262/#sec-arraybuffer-length
 */
 
-(function() {
+const length = 8;
+const maxByteLength = 7;
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "new ArrayBuffer()",
+	properties: ["'maxByteLength'"],
+};
 
-try {
-	new ArrayBuffer(8);
-	new ArrayBuffer(8, {});
-} catch (_) {
-	throw new Error("failure before pollution");
+export function prerequisite() {
+	if (length <= maxByteLength) {
+		return [false, `${maxByteLength} < ${length} must hold`];
+	}
+
+	try {
+		new ArrayBuffer(length);
+		new ArrayBuffer(length, {});
+		return [true, null];
+	} catch (error) {
+		return [false, error.toString()];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.maxByteLength = maxByteLength;
 
-Object.prototype.maxByteLength = 7;
-
-try {
-	new ArrayBuffer(8);
-} catch (_) {
-	throw new Error("pollution should have no effect without options argument");
+	try {
+		new ArrayBuffer(8, {});
+		return false;
+	} catch (_) {
+		return true;
+	}
 }
 
-try {
-	new ArrayBuffer(6, {});
-} catch (_) {
-	throw new Error("pollution should have no effect if the given length is smaller than maxByteLength");
+export function cleanup() {
+	delete Object.prototype.maxByteLength;
 }
-
-let threw = false;
-try {
-	new ArrayBuffer(8, {});
-} catch (_) {
-	threw = true;
-}
-
-if (threw) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
-}
-
-delete Object.prototype.maxByteLength;
-
-})();

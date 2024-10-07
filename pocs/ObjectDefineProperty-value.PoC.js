@@ -13,40 +13,40 @@ Specification:
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
-(function () {
+const propertyName = "foo";
+const value = "bar";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.defineProperty",
+	properties: ["'value'"],
+};
 
-const p = "foobar";
+export function prerequisite() {
+	const object = {};
+	Object.defineProperty(object, propertyName, {});
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const beforeO = {};
-Object.defineProperty(beforeO, p, {});
-
-if (beforeO[p] !== undefined) {
-	throw new Error("has a value by default");
+	const got = object[propertyName];
+	if (got === undefined) {
+		return [true, null];
+	} else {
+		return [false, `got value '${got}'`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.value = value;
 
-Object.prototype.value = 42;
+	const object = {};
+	Object.defineProperty(object, propertyName, {});
 
-const afterO = {};
-Object.defineProperty(afterO, p, { });
-
-delete Object.prototype.value;
-
-if (afterO[p] === 42) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const got = object[propertyName];
+	if (got === value) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-})();
+export function cleanup() {
+	delete Object.prototype.value;
+}

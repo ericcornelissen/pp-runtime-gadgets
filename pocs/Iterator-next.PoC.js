@@ -9,54 +9,48 @@ Specification:
 1. https://tc39.es/ecma262/#sec-getiteratorfrommethod
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
+const value = "foobar";
 const subject = {
 	[Symbol.iterator]() {
-		return { };
+		return {};
 	}
 };
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-let threw = false;
-try {
-	Array.from(subject);
-} catch (_) {
-	threw = true;
-}
-
-if (!threw) {
-	throw new Error("no error thrown before pollution");
-}
-
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-let flag = false;
-Object.prototype.next = () => {
-	if (flag) {
-		return { done: true };
-	}
-
-	flag = true;
-	return { value: "foobar", done: false };
+export const about = {
+	function: "Iterator",
+	properties: ["'next'"],
 };
 
-const list = Array.from(subject);
-if (list.length === 1 && list[0] === "foobar") {
-	console.log("Success");
-} else {
-	throw new Error("Failure");
+export function prerequisite() {
+	try {
+		Array.from(subject);
+		return [false, "unexpected non-throw"];
+	} catch (_) {
+		return [true, null];
+	}
 }
 
-delete Object.prototype.next;
+export function test() {
+	{
+		let flag = false;
+		Object.prototype.next = () => {
+			if (flag) {
+				return { done: true };
+			}
 
-})();
+			flag = true;
+			return { value, done: false };
+		};
+	}
+
+	const got = Array.from(subject);
+	if (got.length === 1 && got[0] === value) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype.next;
+}

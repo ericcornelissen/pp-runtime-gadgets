@@ -13,42 +13,39 @@ Specification:
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
-(function () {
+const propertyName = "foobar";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.defineProperty",
+	properties: ["'enumerable'"],
+};
 
-const p = "foobar";
+export function prerequisite() {
+	const object = {};
+	Object.defineProperty(object, propertyName, { value: 42 });
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const beforeO = {};
-Object.defineProperty(beforeO, p, { value: 42 });
-
-const beforeD = Object.getOwnPropertyDescriptor(beforeO, p);
-if (beforeD.enumerable) {
-	throw new Error("enumerable by default");
+	const got = Object.getOwnPropertyDescriptor(object, propertyName);
+	if (got.enumerable) {
+		return [false, "already enumerable"];
+	} else {
+		return [true, null];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.enumerable = true;
 
-Object.prototype.enumerable = true;
+	const object = {};
+	Object.defineProperty(object, propertyName, { value: 42 });
 
-const afterO = {};
-Object.defineProperty(afterO, p, { value: 42 });
-
-const afterD = Object.getOwnPropertyDescriptor(afterO, p);
-if (afterD.enumerable) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const got = Object.getOwnPropertyDescriptor(object, propertyName);
+	if (got.enumerable) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype.enumerable;
-
-})();
+export function cleanup() {
+	delete Object.prototype.enumerable;
+}

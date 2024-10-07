@@ -9,12 +9,6 @@ Specification:
 1. https://tc39.es/ecma262/#sec-iteratorvalue
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
 const value = "foobar";
 const subject = {
 	[Symbol.iterator]() {
@@ -28,28 +22,32 @@ const subject = {
 	}
 };
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Iterator",
+	properties: ["'value'"],
+};
 
-const before = Array.from(subject);
-if (before.length !== 1 && before[0] !== undefined) {
-	throw new Error("unexpected behavior before pollution");
+export function prerequisite() {
+	const got = Array.from(subject);
+	if (got.length === 1 && got[0] === undefined) {
+		return [true, null];
+	} else {
+		return [false, `got [${got.join(",")}]`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.value = value;
 
-Object.prototype.value = value;
+	const got = Array.from(subject);
+	if (got.length === 1 && got[0] === value) {
+		return true;
+	} else {
+		return false;
+	}
 
-const after = Array.from(subject);
-delete Object.prototype.value;
-
-if (after.length === 1 && after[0] === value) {
-	console.log("Success");
-} else {
-	throw new Error("Failure");
 }
 
-})();
+export function cleanup() {
+	delete Object.prototype.value;
+}

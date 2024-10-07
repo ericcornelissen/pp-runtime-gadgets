@@ -11,13 +11,11 @@ Specification:
 1. https://tc39.es/ecma262/#sec-object.keys
 */
 
-(function () {
+const propertyName = "foo";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const subject = new Proxy({ foo: "bar" }, {
+const subject = new Proxy({
+	[propertyName]: "bar",
+}, {
 	getOwnPropertyDescriptor() {
 		return {
 			configurable: true
@@ -25,30 +23,31 @@ const subject = new Proxy({ foo: "bar" }, {
 	}
 });
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.keys",
+	properties: ["'enumerable'"],
+};
 
-const before = Object.keys(subject);
-if (before.length !== 0) {
-	throw new Error("unexpected behavior before pollution");
+export function prerequisite() {
+	const got = Object.keys(subject);
+	if (got.length === 0) {
+		return [true, null];
+	} else {
+		return [false, `got [${got.join(",")}]`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.enumerable = true;
 
-Object.prototype.enumerable = true;
-
-const after = Object.keys(subject);
-if (after.length === 1) {
-	console.log("Success");
-} else if (after.length === before.length) {
-	throw new Error("Failed");
-} else {
-	throw new Error("Unexpected effect");
+	const got = Object.keys(subject);
+	if (got.length === 1 && got[0] === propertyName) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype.enumerable;
-
-})();
+export function cleanup() {
+	delete Object.prototype.enumerable;
+}

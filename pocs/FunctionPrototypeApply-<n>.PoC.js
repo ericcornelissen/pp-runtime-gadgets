@@ -13,46 +13,43 @@ Specification:
 2. https://tc39.es/ecma262/#sec-function.prototype.apply
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
 const thisArg = {};
+
 const args = {
 	length: 2,
 	0: "foo",
 };
 
 function f(x, y) {
-	return `${x}${y}`;
+	return `${x} ${y}`;
 }
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Function.prototype.apply",
+	properties: ["<n>"],
+};
 
-const before = f.apply(thisArg, args);
-if (before !== "fooundefined") {
-	throw new Error("wrong result before pollution");
+export function prerequisite() {
+	const got = f.apply(thisArg, args);
+	if (got === "foo undefined") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
+
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype[1] = "bar";
 
-Object.prototype[1] = "bar";
-
-const after = f.apply(thisArg, args);
-if (after === "foobar") {
-	console.log("Success");
-} else if (after === before) {
-	throw new Error("output did not change");
-} else {
-	throw new Error("pollution did not work as expected");
+	const got = f.apply(thisArg, args);
+	if (got === "foo bar") {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype[1];
-
-})();
+export function cleanup() {
+	delete Object.prototype[1];
+}

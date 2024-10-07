@@ -13,48 +13,45 @@ Specification:
 2. https://tc39.es/ecma262/#sec-topropertydescriptor
 */
 
-(function () {
+const propertyName = "foo";
+const oldValue = "bar";
+const newValue = "baz";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.defineProperty",
+	properties: ["'writable'"],
+};
 
-const p = "foobar";
+export function prerequisite() {
+	if (oldValue === newValue) {
+		return [false, "old and new value are the same"];
+	}
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+	const object = {};
+	Object.defineProperty(object, propertyName, { value: oldValue });
 
-const beforeO = {};
-Object.defineProperty(beforeO, p, { value: 42 });
-
-try {
-	beforeO[p] = 43;
-} catch (_) { }
-
-if (beforeO[p] === 43) {
-	throw new Error("writable by default");
+	try {
+		object[propertyName] = newValue;
+		return [false, "writable by default"];
+	} catch (_) {
+		return [true, null];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.writable = true;
 
-Object.prototype.writable = true;
+	const object = {};
+	Object.defineProperty(object, propertyName, { value: oldValue });
 
-const afterO = {};
-Object.defineProperty(afterO, p, { value: 42 });
-
-delete Object.prototype.writable;
-
-try {
-	afterO[p] = 43;
-} catch (_) { }
-
-if (afterO[p] === 43) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	object[propertyName] = newValue;
+	if (object[propertyName] === newValue) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-})();
+export function cleanup() {
+	delete Object.prototype.writable;
+}

@@ -13,42 +13,31 @@ Specification:
 2. https://tc39.es/ecma262/#sec-string.prototype.includes
 */
 
-(function() {
+export const about = {
+	function: "String.prototype.includes",
+	properties: ["@@match"],
+};
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-let threwBefore = false;
-try {
-	"foobar".includes({});
-} catch (_) {
-	threwBefore = true;
+export function prerequisite() {
+	try {
+		"foobar".includes({});
+		return [true, null];
+	} catch (error) {
+		return [false, `got ${error.toString()}`];
+	}
 }
 
-if (threwBefore) {
-	throw new Error("unexpected result before polluting");
+export function test() {
+	Object.prototype[Symbol.match] = true;
+
+	try {
+		"foobar".includes({});
+		return false;
+	} catch (_) {
+		return true;
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype[Symbol.match] = true;
-
-let threwAfter = false;
-try {
-	"foobar".includes({});
-} catch (_) {
-	threwAfter = true;
+export function cleanup() {
+	delete Object.prototype[Symbol.match];
 }
-
-if (threwAfter) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
-}
-
-delete Object.prototype[Symbol.match];
-
-})();

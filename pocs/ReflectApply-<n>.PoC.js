@@ -13,12 +13,7 @@ Specification:
 2. https://tc39.es/ecma262/#sec-reflect.apply
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
+const value = "bar";
 const thisArg = {};
 const args = {
 	length: 2,
@@ -26,33 +21,34 @@ const args = {
 };
 
 function f(x, y) {
-	return `${x}${y}`;
+	return `${x} ${y}`;
 }
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Reflect.apply",
+	properties: ["<n>"],
+};
 
-const before = Reflect.apply(f, thisArg, args);
-if (before !== "fooundefined") {
-	throw new Error("wrong result before pollution");
+export function prerequisite() {
+	const got = Reflect.apply(f, thisArg, args);
+	if (got === "foo undefined") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype[1] = value;
 
-Object.prototype[1] = "bar";
-
-const after = Reflect.apply(f, thisArg, args);
-if (after === "foobar") {
-	console.log("Success");
-} else if (after === "fooundefined") {
-	throw new Error("Failed");
-} else {
-	throw new Error("Pollution did not work as expected");
+	const after = Reflect.apply(f, thisArg, args);
+	if (after === `foo ${value}`) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype[1];
-
-})();
+export function cleanup() {
+	delete Object.prototype[1];
+}

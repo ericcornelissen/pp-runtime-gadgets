@@ -9,30 +9,35 @@ Specification:
 2. https://tc39.es/ecma262/#sec-toprimitive
 */
 
-(function() {
+const toStringBackup = Object.prototype.toString;
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+const string = "foobar";
 
-const before = (""+{});
-if (before !== "[object Object]") {
-	throw new Error(`unexpected behavior before pollution (got '${before}')`);
+export const about = {
+	function: "[[ToPrimitive]]",
+	properties: ["'toString'"],
+};
+
+export function prerequisite() {
+	const got = ("" + {});
+	if (got === "[object Object]") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype.toString = () => string;
 
-Object.prototype.toString = () => "42";
-
-const after = (""+{});
-if (after === "42") {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const got = ("" + {});
+	if (got === string) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype.toString;
-
-})();
+export function cleanup() {
+	Object.prototype.toString = toStringBackup;
+}

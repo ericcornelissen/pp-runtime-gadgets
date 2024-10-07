@@ -13,34 +13,37 @@ Specification:
 2. https://tc39.es/ecma262/#sec-string.prototype.replaceall
 */
 
-(function() {
+const value = "Hello world!";
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "String.prototype.replaceAll",
+	properties: ["@@match", "@@replace", "'flag'"],
+};
 
-const before = "foobar".replaceAll({}, "baz");
-if (before !== "foobar") {
-	throw new Error("Unexpected behavior before polluting");
+export function prerequisite() {
+	const got = "foobar".replaceAll({}, "baz");
+	if (got === "foobar") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export function test() {
+	Object.prototype[Symbol.match] = true;
+	Object.prototype[Symbol.replace] = () => value;
+	Object.prototype.flags = "g";
 
-Object.prototype[Symbol.match] = true;
-Object.prototype[Symbol.replace] = () => "Hello world!";
-Object.prototype.flags = "g";
-
-const after = "foobar".replaceAll({}, "baz");
-if (after === "Hello world!") {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
+	const after = "foobar".replaceAll({}, "baz");
+	if (after === value) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-delete Object.prototype[Symbol.match];
-delete Object.prototype[Symbol.replace];
-delete Object.prototype.flags;
-
-})();
+export function cleanup() {
+	delete Object.prototype[Symbol.match];
+	delete Object.prototype[Symbol.replace];
+	delete Object.prototype.flags;
+}

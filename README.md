@@ -8,6 +8,13 @@ can be affected by prototype pollution.
 - Continue in the [spec](https://tc39.es/ecma262), currently at `Get(` 38/160.
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
 
+## Reproduce
+
+To reproduce the results
+
+- for Node.js: `make test-node`
+- for Browsers: `make test-web` and open <http://localhost:8080/web> in a browser.
+
 ## Overview
 
 The table below provides an overview of known functions affected by prototype
@@ -33,19 +40,19 @@ language design.
 - `3`: _Faulty implementation_ - Gadgets that occur because a user uses an
   object that is implemented incorrectly.
 
-All gadgets were tested on Node.js v22.1.0, Deno v1.37.2, Chromium v124, and
-Firefox v126.0.
+All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
+v129, and Firefox (Desktop) v131.
 
 | API                           | Prop(s)                             | Level | Type | Node.js | Deno | Chromium      | Firefox       |
 | ----------------------------- | ----------------------------------- | ----- | ---- | ------- | ---- | ------------- | ------------- |
 | `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | No            |
+| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | ?             |
 | `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | TBD  | TBD           | TBD           |
+| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | TBD  | TBD           | TBD           |
+|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
@@ -56,16 +63,16 @@ Firefox v126.0.
 | `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | TBD  | TBD           | TBD           |
+| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
-|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
-|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | TBD  | TBD           | TBD           |
-|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | TBD  | TBD           | TBD           |
-|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
-|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | TBD  | TBD           | TBD           |
+| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 | `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes  | _Unsupported_ | _Unsupported_ |
 | `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 | `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
@@ -165,8 +172,14 @@ const proxy = new Proxy({}, {
 
 ## Related Work
 
+- [GHunter: Universal Prototype Pollution Gadgets in JavaScript Runtimes](https://www.usenix.org/conference/usenixsecurity24/presentation/cornelissen)
+
+  Toolchain to find prototype pollution gadgets in the Node.js runtime. It
+  cannot find the gadgets described in this repository because they're not
+  covered by the binding code.
+
 - [Silent Spring: Prototype Pollution Leads to Remote Code Execution in Node.js](https://www.usenix.org/conference/usenixsecurity23/presentation/shcherbakov)
 
   Toolchain to find prototype pollution and gadgets in libraries and the Node.js
-  runtime. It cannot find the gadgets described in this repository because the
-  it cannot statically analyze built-in functionality.
+  runtime. It cannot find the gadgets described in this repository because it
+  cannot statically analyze built-in functionality.

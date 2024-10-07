@@ -9,41 +9,47 @@ Specification:
 1. https://tc39.es/ecma262/#sec-iteratorcomplete
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
 const subject = {
 	[Symbol.iterator]() {
+		let i = 0;
 		return {
 			next() {
-				return { value: "foobar" };
+				i += 1;
+				if (i === 1) {
+					return { value: "foo" };
+				} else {
+					return { value: "bar", done: true };
+				}
 			},
 		};
 	}
 };
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Iterator",
+	properties: ["'done'"],
+};
 
-// n/a
-
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype.done = true;
-
-const list = Array.from(subject);
-if (list.length === 0) {
-	console.log("Success");
-} else {
-	throw new Error("Failure");
+export function prerequisite() {
+	const got = Array.from(subject);
+	if (got.length === 1 && got[0] === "foo") {
+		return [true, null];
+	} else {
+		return [false, `got [${got.join(",")}]`];
+	}
 }
 
-delete Object.prototype.done;
+export function test() {
+	Object.prototype.done = true;
 
-})();
+	const got = Array.from(subject);
+	if (got.length === 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype.done;
+}

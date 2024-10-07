@@ -11,61 +11,61 @@ Specification:
 2. https://tc39.es/ecma262/#sec-function.prototype.apply
 */
 
-(function () {
+const p0 = "#1";
+const p1 = "#2";
+const p2 = "#3";
+const v0 = "foo";
+const v1 = "bar";
 
-// -----------------------------------------------------------------------------
-// --- SETUP -------------------------------------------------------------------
-// -----------------------------------------------------------------------------
+export const about = {
+	function: "Object.fromEntries",
+	properties: ["0", "1"],
+};
 
-const p0 = "must be unique #1";
-const p1 = "must be unique #2";
-const p2 = "must be unique #3";
-const v = "foobar";
+export function prerequisite() {
+	const object = Object.fromEntries([
+		[p0, v0],
+		[p1],
+		[],
+	]);
 
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const before = Object.fromEntries([
-	[p0, "some value"],
-	[p1],
-	[],
-]);
-
-if (!Object.hasOwn(before, p1)) {
-	throw new Error("Property without value is not present");
-} else if (before[p1] !== undefined) {
-	throw new Error("Property without value is not undefined");
+	if (
+		Object.hasOwn(object, p0) && object[p0] === v0
+		&&
+		Object.hasOwn(object, p1) && object[p1] === undefined
+		&&
+		!Object.hasOwn(object, p2)
+	) {
+		return [true, null];
+	} else {
+		return [false, `got ${object}`];
+	}
 }
 
-if (Object.hasOwn(before, p2)) {
-	throw new Error("Polluted property is present");
+export function test() {
+	Object.prototype[0] = p2;
+	Object.prototype[1] = v1;
+
+	const object = Object.fromEntries([
+		[p0, v0],
+		[p1],
+		[],
+	]);
+
+	if (
+		Object.hasOwn(object, p0) && object[p0] === v0
+		&&
+		Object.hasOwn(object, p1) && object[p1] === v1
+		&&
+		Object.hasOwn(object, p2) && object[p2] === v1
+	) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype[0] = p2;
-Object.prototype[1] = v;
-
-const after = Object.fromEntries([
-	[p0, "some value"],
-	[p1],
-	[],
-]);
-
-if (!Object.hasOwn(after, p1)) {
-	throw new Error("property without value is not present");
+export function cleanup() {
+	delete Object.prototype[0];
+	delete Object.prototype[1];
 }
-
-if (after[p1] === v && after[p2] === v) {
-	console.log("Success");
-} else {
-	throw new Error("Failed");
-}
-
-delete Object.prototype[0];
-delete Object.prototype[1];
-
-})();

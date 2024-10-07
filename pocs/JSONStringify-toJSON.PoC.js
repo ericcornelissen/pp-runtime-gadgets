@@ -9,34 +9,32 @@ Specification:
 2. https://tc39.es/ecma262/#sec-serializejsonproperty
 */
 
-(function () {
-
-// -----------------------------------------------------------------------------
-// --- ORIGINAL ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const before = JSON.stringify({});
-if (before !== "{}") {
-	throw new Error("unexpected result before pollution");
-}
-
-// -----------------------------------------------------------------------------
-// --- POLLUTED ----------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-Object.prototype.toJSON = function() {
-	return [];
+export const about = {
+	function: "JSON.stringify",
+	properties: ["'toJSON'"],
 };
 
-const after = JSON.stringify({});
-if (after === "[]") {
-	console.log("Success");
-} else if (after === before) {
-	throw new Error("output did not change");
-} else {
-	throw new Error("pollution did not work as expected");
+export function prerequisite() {
+	const got = JSON.stringify({});
+	if (got === "{}") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
+
 }
 
-delete Object.prototype.toJSON;
+export function test() {
+	Object.prototype.toJSON = () => [];
 
-})();
+	const got = JSON.stringify({});
+	if (got === "[]") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype.toJSON;
+}

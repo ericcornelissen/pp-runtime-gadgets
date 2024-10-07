@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<meta
+		http-equiv="Content-Security-Policy"
+		content="trusted-types 'none'; require-trusted-types-for 'script';"
+	/>
+</head>
+<body>
+	<noscript>
+		This page does not work without JavaScript.
+		It is meant to run JavaScript tests using your browser.
+		Enable JavaScript for this page to get the results of these tests.
+	</noscript>
+
+	<h1><span style="font-variant: small-caps;">pp-runtime-gadgets</span> results for your browser</h1>
+	<pre id="browser"></pre>
+	<p>Visit the <a href="https://github.com/ericcornelissen/pp-runtime-gadgets" target="_blank" rel="noopener">repo</a> for more information.</p>
+	<script>
+		const browser = document.getElementById("browser");
+		browser.innerText = navigator.userAgent;
+	</script>
+
+	<hr/>
+
+	<table>
+		<thead>
+			<tr>
+				<th>API</th>
+				<th>Properties</th>
+				<th>Result</th>
+				<th>Comment</th>
+			</tr>
+		</thead>
+		<tbody id="results">
+			<!-- Results are inserted dynamically -->
+		</tbody>
+	</table>
+	<script type="module" src="./runners/web.js"></script>
+</body>
+</html>
