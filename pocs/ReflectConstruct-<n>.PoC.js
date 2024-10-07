@@ -1,0 +1,55 @@
+/*
+Explanation:
+Using `Reflect.construct` on a function configures the args to be used for a
+construction of an object by that function. Since args can be any array-like
+object, if it is implemented incorrectly polluting the right property can be
+result in that value being passed as an argument to the function being
+constructed.
+
+The root of the problem is that `CreateListFromArrayLike` assumes array-like
+object correctly report their length.
+
+Specification:
+1. https://tc39.es/ecma262/#sec-createlistfromarraylike
+2. https://tc39.es/ecma262/#sec-reflect.construct
+*/
+
+const value = "bar";
+const args = {
+	length: 2,
+	0: "foo",
+};
+
+function c(x, y) {
+	this.x = x;
+	this.y = y;
+}
+
+export const about = {
+	function: "Reflect.construct",
+	properties: ["<n>"],
+};
+
+export function prerequisite() {
+	const got = Reflect.construct(c, args);
+	if (got.y === undefined) {
+		return [true, null];
+	} else {
+		return [false, `got ${got.y}`];
+	}
+}
+
+export function test() {
+	Object.prototype[1] = value;
+
+	const after = Reflect.construct(c, args);
+	if (after.y === value) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype[1];
+}

@@ -1,0 +1,40 @@
+/*
+Explanation:
+The `JSON.stringify` function allows objects to specify custom serialization via
+the toJSON method. Hence, by polluting this you can control how objects without
+an explicit toJSON method are serialized.
+
+Specification:
+1. https://tc39.es/ecma262/#sec-json.stringify
+2. https://tc39.es/ecma262/#sec-serializejsonproperty
+*/
+
+export const about = {
+	function: "JSON.stringify",
+	properties: ["'toJSON'"],
+};
+
+export function prerequisite() {
+	const got = JSON.stringify({});
+	if (got === "{}") {
+		return [true, null];
+	} else {
+		return [false, `got ${got}`];
+	}
+
+}
+
+export function test() {
+	Object.prototype.toJSON = () => [];
+
+	const got = JSON.stringify({});
+	if (got === "[]") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function cleanup() {
+	delete Object.prototype.toJSON;
+}
