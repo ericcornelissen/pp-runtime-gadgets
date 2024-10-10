@@ -18,6 +18,7 @@ import * as ObjectFromEntries01 from "./ObjectFromEntries-0,1.PoC.js";
 import * as ObjectKeysEnumerable from "./ObjectKeys-enumerable.PoC.js";
 import * as ObjectPrototypeToStringSymbolToStringTag from "./ObjectPrototypeToString-@@toStringTag.PoC.js";
 import * as ObjectValuesEnumerable from "./ObjectValues-enumerable.PoC.js";
+import * as ProxySet from "./Proxy-set.PoC.js";
 import * as ReflectApplyN from "./ReflectApply-<n>.PoC.js";
 import * as ReflectConstructN from "./ReflectConstruct-<n>.PoC.js";
 import * as ReflectDefinePropertyConfigurable from "./ReflectDefineProperty-configurable.PoC.js";
@@ -27,6 +28,7 @@ import * as ReflectDefinePropertySet from "./ReflectDefineProperty-set.PoC.js";
 import * as ReflectDefinePropertyValue from "./ReflectDefineProperty-value.PoC.js";
 import * as ReflectDefinePropertyWritable from "./ReflectDefineProperty-writable.PoC.js";
 import * as SharedArrayBufferMaxByteLength from "./SharedArrayBuffer-maxByteLength.PoC.js";
+import * as SetPrototypeUnionHasSize from "./SetPrototypeUnion-has,size.PoC.js";
 import * as StringPrototypeEndsWithSymbolMatch from "./StringPrototypeEndsWith-@@match.PoC.js";
 import * as StringPrototypeIncludesSymbolMatch from "./StringPrototypeIncludes-@@match.PoC.js";
 import * as StringPrototypeMatchAllMatchMatchAllFlag from "./StringPrototypeMatchAll-@@match,@@matchAll,flag.PoC.js";
@@ -54,6 +56,7 @@ export const tests = [
 	ObjectKeysEnumerable,
 	ObjectPrototypeToStringSymbolToStringTag,
 	ObjectValuesEnumerable,
+	ProxySet,
 	ReflectApplyN,
 	ReflectConstructN,
 	ReflectDefinePropertyConfigurable,
@@ -63,6 +66,7 @@ export const tests = [
 	ReflectDefinePropertyValue,
 	ReflectDefinePropertyWritable,
 	SharedArrayBufferMaxByteLength,
+	SetPrototypeUnionHasSize,
 	StringPrototypeEndsWithSymbolMatch,
 	StringPrototypeIncludesSymbolMatch,
 	StringPrototypeMatchAllMatchMatchAllFlag,
