@@ -43,42 +43,46 @@ language design.
 All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
 v129, and Firefox (Desktop) v131.
 
-| API                           | Prop(s)                             | Level | Type | Node.js | Deno | Chromium      | Firefox       |
-| ----------------------------- | ----------------------------------- | ----- | ---- | ------- | ---- | ------------- | ------------- |
-| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | ?             |
-| `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`get`][o0009]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`set`][o0010]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`value`][o0011]                    | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`writable`][o0012]                 | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
-| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes  | _Unsupported_ | _Unsupported_ |
-| `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `3`   | `2`  | Yes     | Yes  | Yes           | Yes           |
-| `String.prototype.startsWith` | [`@@match`][o0024]                  | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
+| API                           | Prop(s)                             | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
+| ----------------------------- | ----------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
+| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`get`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`set`][o0010]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`value`][o0011]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`writable`][o0012]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `new Proxy`                   | [`getOwnPropertyDescriptor`][o0038] | `3`   | `3`  | Yes     | NOT TESTED     | Yes           | Yes           |
+|                               | [`ownKeys`][o0037]                  | `3`   | `3`  | Yes     | NOT TESTED     | Yes           | Yes           |
+|                               | [`set`][o0036]                      | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
+| `Set.prototype.contains`      | [`has,size`][o0035]                 | `3`   | `2`  | Yes     | _Unsupported_  | Yes           | Yes           |
+| `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.startsWith` | [`@@match`][o0024]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
@@ -114,6 +118,10 @@ v129, and Firefox (Desktop) v131.
 [o0032]: ./pocs/Iterator-done.PoC.js
 [o0033]: ./pocs/Iterator-value.PoC.js
 [o0034]: ./pocs/ObjectToString-@@toStringTag.PoC.js
+[o0035]: ./pocs/SetPrototypeUnion-has,size.PoC.js
+[o0036]: ./pocs/Proxy-set.PoC.js
+[o0037]: ./pocs/Proxy-ownKeys.PoC.js
+[o0038]: ./pocs/Proxy-getOwnPropertyDescriptor.PoC.js
 
 ## Unaffected
 
@@ -135,6 +143,7 @@ deemed unaffected by prototype pollution.
 | [`[[Get]]`][i0009]                     | `<P>`          | _Not evaluated_                                                                                                     |
 | [`Object.assign`][i0010]               | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
 | [`ObjectDefineProperties`][i0011]      | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`RegExp.prototype.toString`][i0012]   | `source`       | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                  |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
 [i0002]: https://tc39.es/ecma262/#sec-ordinaryhasinstance
@@ -147,6 +156,7 @@ deemed unaffected by prototype pollution.
 [i0009]: https://tc39.es/ecma262/#sec-arguments-exotic-objects-get-p-receiver
 [i0010]: https://tc39.es/ecma262/#sec-object.assign
 [i0011]: https://tc39.es/ecma262/#sec-objectdefineproperties
+[i0012]: https://tc39.es/ecma262/#sec-regexp.prototype.tostring
 
 ## Approach
 
