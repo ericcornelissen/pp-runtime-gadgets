@@ -36,7 +36,6 @@ export function prerequisite() {
 	} else {
 		return [false, `got ${got}`];
 	}
-
 }
 
 export function test() {
