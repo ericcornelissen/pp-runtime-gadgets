@@ -1,13 +1,4 @@
-/*
-Explanation:
-Any functionality operating on iterators assumes iterators are implemented
-correctly, i.e. they return an object with a `next` function. If an operator
-fails to do so, the `next` method may be looked up in the prototype hierarchy
-instead.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-getiteratorfrommethod
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const value = "foobar";
 const subject = {
@@ -18,7 +9,16 @@ const subject = {
 
 export const about = {
 	function: "Iterator",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator",
 	properties: ["'next'"],
+	description: `
+Any functionality operating on iterators assumes iterators are implemented
+correctly, i.e. they return an object with a 'next' function. If an operator
+fails to do so, the 'next' method may be looked up in the prototype hierarchy
+instead.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-getiteratorfrommethod",
+	],
 };
 
 export function prerequisite() {

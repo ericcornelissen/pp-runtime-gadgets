@@ -1,21 +1,21 @@
-/*
-Explanation:
-The `Reflect.defineProperty` API accepts a descriptor object for the property
-being defined. Since this is a regular JavaScript object, any properties not
-explicitly specified will be looked up in the prototype. Hence, any property,
-including `get` can be polluted to affect newly defined properties.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-reflect.defineproperty
-2. https://tc39.es/ecma262/#sec-topropertydescriptor
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const propertyName = "foo";
 const value = "bar";
 
 export const about = {
 	function: "Reflect.defineProperty",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect/defineProperty",
 	properties: ["'get'"],
+	description: `
+The Reflect.defineProperty API accepts a descriptor object for the property
+being defined. Since this is a regular JavaScript object, any properties not
+explicitly specified will be looked up in the prototype. Hence, any property,
+including 'get' can be polluted to affect newly defined properties.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-reflect.defineproperty",
+		"https://tc39.es/ecma262/#sec-topropertydescriptor",
+	],
 };
 
 export function prerequisite() {

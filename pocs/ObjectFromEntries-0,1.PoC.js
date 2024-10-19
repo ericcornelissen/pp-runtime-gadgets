@@ -1,15 +1,4 @@
-/*
-Explanation:
-The `Object.fromEntries` function exists to convert key-value pairs stored in a
-2-dimensional array into an object. It assumes all pairs it received actually
-consist of 2 values (without checking the length), so if a pair is missing a
-value or key and value the corresponding index will be looked up in the
-prototype hierarchy instead.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-createlistfromarraylike
-2. https://tc39.es/ecma262/#sec-function.prototype.apply
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const p0 = "#1";
 const p1 = "#2";
@@ -19,7 +8,18 @@ const v1 = "bar";
 
 export const about = {
 	function: "Object.fromEntries",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries",
 	properties: ["0", "1"],
+	description: `
+The Object.fromEntries function exists to convert key-value pairs stored in a
+2-dimensional array into an object. It assumes all pairs it received actually
+consist of 2 values (without checking the length), so if a pair is missing a
+value or key and value the corresponding index will be looked up in the
+prototype hierarchy instead.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-createlistfromarraylike",
+		"https://tc39.es/ecma262/#sec-function.prototype.apply",
+	],
 };
 
 export function prerequisite() {

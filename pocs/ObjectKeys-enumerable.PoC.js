@@ -1,15 +1,4 @@
-/*
-Explanation:
-To get the keys of an object JavaScript enumerates its properties. To
-enumerate properties of an object, JavaScript relies on the `enumerable`
-property in each property's descriptor. If the descriptor is implemented
-incorrectly (e.g. on a `Proxy`) the descriptor object becomes vulnerable to
-prototype pollution, allowing you to make properties enumerable.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-enumerableownproperties
-1. https://tc39.es/ecma262/#sec-object.keys
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const propertyName = "foo";
 
@@ -25,7 +14,18 @@ const subject = new Proxy({
 
 export const about = {
 	function: "Object.keys",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys",
 	properties: ["'enumerable'"],
+	description: `
+To get the keys of an object JavaScript enumerates its properties. To
+enumerate properties of an object, JavaScript relies on the 'enumerable'
+property in each property's descriptor. If the descriptor is implemented
+incorrectly (e.g. on a Proxy) the descriptor object becomes vulnerable to
+prototype pollution, allowing you to make properties enumerable.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-object.keys",
+		"https://tc39.es/ecma262/#sec-enumerableownproperties",
+	],
 };
 
 export function prerequisite() {

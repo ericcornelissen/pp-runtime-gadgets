@@ -1,15 +1,4 @@
-/*
-Explanation:
-To get the entries of an object JavaScript enumerates its properties. To
-enumerate properties of an object, JavaScript relies on the `enumerable`
-property in each property's descriptor. If the descriptor is implemented
-incorrectly (e.g. on a `Proxy`) the descriptor object becomes vulnerable to
-prototype pollution, allowing you to make properties enumerable.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-enumerableownproperties
-1. https://tc39.es/ecma262/#sec-object.entries
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const propertyName = "foo";
 const value = "bar";
@@ -26,7 +15,20 @@ const subject = new Proxy({
 
 export const about = {
 	function: "Object.entries",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries",
 	properties: ["'enumerable'"],
+	description: `
+The Object.defineProperty API accepts a descriptor object for the property
+being defined. Since this is a regular JavaScript object, any properties not
+explicitly specified will be looked up in the prototype. Hence, any property,
+including 'enumerable' can be polluted to affect newly defined properties.
+
+Notes:
+- This is a known gadget and is mentioned on MDN.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-object.defineproperty",
+		"https://tc39.es/ecma262/#sec-topropertydescriptor",
+	],
 };
 
 export function prerequisite() {

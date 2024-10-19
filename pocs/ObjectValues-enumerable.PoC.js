@@ -1,15 +1,4 @@
-/*
-Explanation:
-To get the values of an object JavaScript enumerates its properties. To
-enumerate properties of an object, JavaScript relies on the `enumerable`
-property in each property's descriptor. If the descriptor is implemented
-incorrectly (e.g. on a `Proxy`) the descriptor object becomes vulnerable to
-prototype pollution, allowing you to make properties enumerable.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-enumerableownproperties
-1. https://tc39.es/ecma262/#sec-object.values
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const value = "bar";
 
@@ -25,7 +14,18 @@ const subject = new Proxy({
 
 export const about = {
 	function: "Object.values",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values",
 	properties: ["'enumerable'"],
+	description: `
+To get the values of an object JavaScript enumerates its properties. To
+enumerate properties of an object, JavaScript relies on the 'enumerable'
+property in each property's descriptor. If the descriptor is implemented
+incorrectly (e.g. on a Proxy) the descriptor object becomes vulnerable to
+prototype pollution, allowing you to make properties enumerable.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-object.values",
+		"https://tc39.es/ecma262/#sec-enumerableownproperties",
+	],
 };
 
 export function prerequisite() {

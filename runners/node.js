@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BlueOak-1.0.0
+
 import { all, Outcome } from "./base.js";
 
 for (const { about, result } of all()) {
