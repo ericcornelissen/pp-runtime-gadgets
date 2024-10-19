@@ -1,5 +1,4 @@
 {
-  "license": "ISC",
   "type": "module",
   "dependencies": {
     "acorn": "8.11.3",

@@ -49,6 +49,7 @@ v129, and Firefox (Desktop) v131.
 | `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 |                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.from`                  | [`<n>`][o0044]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 |                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
@@ -65,8 +66,11 @@ v129, and Firefox (Desktop) v131.
 | `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new Proxy`                   | [`getOwnPropertyDescriptor`][o0038] | `3`   | `3`  | Yes     | NOT TESTED     | Yes           | Yes           |
-|                               | [`ownKeys`][o0037]                  | `3`   | `3`  | Yes     | NOT TESTED     | Yes           | Yes           |
+| `new Proxy`                   | [`apply`][o0040]                    | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`deleteProperty`][o0041]           | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`getOwnPropertyDescriptor`][o0038] | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`isExtensible`][o0042]             | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`ownKeys`][o0037]                  | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                               | [`set`][o0036]                      | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
@@ -76,13 +80,15 @@ v129, and Firefox (Desktop) v131.
 |                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `new RegExp`                  | [`source`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
-| `Set.prototype.contains`      | [`has,size`][o0035]                 | `3`   | `2`  | Yes     | _Unsupported_  | Yes           | Yes           |
+| `Set.prototype.contains`      | [`has,size`][o0035]                 | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.startsWith` | [`@@match`][o0024]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `with`                        | [`@@unscopables`][o0043]            | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
@@ -122,6 +128,12 @@ v129, and Firefox (Desktop) v131.
 [o0036]: ./pocs/Proxy-set.PoC.js
 [o0037]: ./pocs/Proxy-ownKeys.PoC.js
 [o0038]: ./pocs/Proxy-getOwnPropertyDescriptor.PoC.js
+[o0039]: ./pocs/RegExp-source.PoC.js
+[o0040]: ./pocs/Proxy-apply.PoC.js
+[o0041]: ./pocs/Proxy-deleteProperty.PoC.js
+[o0042]: ./pocs/Proxy-isExtensible.PoC.js
+[o0043]: ./pocs/with-@@unscopables.PoC.cjs
+[o0044]: ./pocs/ArrayFrom-<n>.PoC.js
 
 ## Unaffected
 

@@ -3,6 +3,7 @@ import * as ToPrimitiveToString from "./[[ToPrimitive]]-toString.PoC.js";
 import * as ToPrimitiveValueOf from "./[[ToPrimitive]]-valueOf.PoC.js";
 import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
 import * as ArrayBufferMaxByteLength from "./ArrayBuffer-maxByteLength.PoC.js";
+import * as ArrayFrom from "./ArrayFrom-<n>.PoC.js";
 import * as IteratorDone from "./Iterator-done.PoC.js";
 import * as IteratorNext from "./Iterator-next.PoC.js";
 import * as IteratorValue from "./Iterator-value.PoC.js";
@@ -18,7 +19,10 @@ import * as ObjectFromEntries01 from "./ObjectFromEntries-0,1.PoC.js";
 import * as ObjectKeysEnumerable from "./ObjectKeys-enumerable.PoC.js";
 import * as ObjectPrototypeToStringSymbolToStringTag from "./ObjectPrototypeToString-@@toStringTag.PoC.js";
 import * as ObjectValuesEnumerable from "./ObjectValues-enumerable.PoC.js";
+import * as ProxyApply from "./Proxy-apply.PoC.js";
+import * as ProxyDeleteProperty from "./Proxy-deleteProperty.PoC.js";
 import * as ProxyGetOwnPropertyDescriptor from "./Proxy-getOwnPropertyDescriptor.PoC.js";
+import * as ProxyIsExtensible from "./Proxy-isExtensible.PoC.js";
 import * as ProxyOwnKeys from "./Proxy-ownKeys.PoC.js";
 import * as ProxySet from "./Proxy-set.PoC.js";
 import * as ReflectApplyN from "./ReflectApply-<n>.PoC.js";
@@ -29,6 +33,7 @@ import * as ReflectDefinePropertyGet from "./ReflectDefineProperty-get.PoC.js";
 import * as ReflectDefinePropertySet from "./ReflectDefineProperty-set.PoC.js";
 import * as ReflectDefinePropertyValue from "./ReflectDefineProperty-value.PoC.js";
 import * as ReflectDefinePropertyWritable from "./ReflectDefineProperty-writable.PoC.js";
+import * as RegExpSource from "./RegExp-source.PoC.js";
 import * as SharedArrayBufferMaxByteLength from "./SharedArrayBuffer-maxByteLength.PoC.js";
 import * as SetPrototypeUnionHasSize from "./SetPrototypeUnion-has,size.PoC.js";
 import * as StringPrototypeEndsWithSymbolMatch from "./StringPrototypeEndsWith-@@match.PoC.js";
@@ -43,6 +48,7 @@ export const tests = [
 	ToPrimitiveValueOf,
 	FunctionPrototypeApplyN,
 	ArrayBufferMaxByteLength,
+	ArrayFrom,
 	IteratorDone,
 	IteratorNext,
 	IteratorValue,
@@ -58,7 +64,10 @@ export const tests = [
 	ObjectKeysEnumerable,
 	ObjectPrototypeToStringSymbolToStringTag,
 	ObjectValuesEnumerable,
+	ProxyApply,
+	ProxyDeleteProperty,
 	ProxyGetOwnPropertyDescriptor,
+	ProxyIsExtensible,
 	ProxyOwnKeys,
 	ProxySet,
 	ReflectApplyN,
@@ -69,6 +78,7 @@ export const tests = [
 	ReflectDefinePropertySet,
 	ReflectDefinePropertyValue,
 	ReflectDefinePropertyWritable,
+	RegExpSource,
 	SharedArrayBufferMaxByteLength,
 	SetPrototypeUnionHasSize,
 	StringPrototypeEndsWithSymbolMatch,
