@@ -33,9 +33,9 @@ test-deno-docker:
 deploy-web:
 	@rm -rf ./_site/
 	@mkdir ./_site/
-	@cp -r ./pocs ./_site/pocs
-	@cp -r ./runners ./_site/runners
-	@cp ./web/index.html ./_site/index.html
+	@cp -r ./pocs/ ./_site/pocs
+	@cp -r ./runners/ ./_site/runners
+	@cp ./web/* ./_site/
 	@cp ./LICENSE.md ./_site/LICENSE
 
 test-web: deploy-web

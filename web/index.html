@@ -5,8 +5,10 @@
 
 	<meta
 		http-equiv="Content-Security-Policy"
-		content="trusted-types 'none'; require-trusted-types-for 'script';"
+		content="base-uri 'none'; connect-src 'self'; default-src 'none'; object-src 'none'; script-src 'self'; style-src 'self'; trusted-types 'none'; require-trusted-types-for 'script';"
 	/>
+
+	<link rel="stylesheet" href="index.css">
 </head>
 <body>
 	<noscript>
@@ -15,13 +17,10 @@
 		Enable JavaScript for this page to get the results of these tests.
 	</noscript>
 
-	<h1><span style="font-variant: small-caps;">pp-runtime-gadgets</span> results for your browser</h1>
+	<h1><span class="proper-name">pp-runtime-gadgets</span> results for your browser</h1>
 	<pre id="browser"></pre>
 	<p>Visit the <a href="https://github.com/ericcornelissen/pp-runtime-gadgets" target="_blank" rel="noopener">repo</a> for more information.</p>
-	<script>
-		const browser = document.getElementById("browser");
-		browser.innerText = navigator.userAgent;
-	</script>
+	<script type="module" src="./current-browser.js"></script>
 
 	<hr/>
 

@@ -18,7 +18,7 @@ for (const { about, result } of all()) {
 	{
 		const $span = document.createElement("span");
 		$span.setAttribute("title", about.description.trim());
-		$span.innerText = about.properties.join(",");
+		$span.innerText = about.properties.join(", ");
 		$properties.appendChild($span);
 	}
 

@@ -51,7 +51,7 @@ v129, and Firefox (Desktop) v131.
 | ----------------------------- | ------------------------------------- | ----- | ---- | ------- | ---- | ------------- | ------------- |
 | `[[ToPrimitive]]`             | [`'toString'`][o0002]                 | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`'valueOf'`][o0003]                  | `2`   | `1`  | Yes     | Yes  | Yes           | Yes           |
-| `new ArrayBuffer`             | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | ?             |
+| `new ArrayBuffer`             | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes  | Yes           | Yes           |
 | `Function.prototype.apply`    | [`<n>`][o0005]                        | `1`   | `3`  | Yes     | Yes  | Yes           | Yes           |
 | `Iterator`                    | [`'done'`][o0032]                     | `3`   | `1`  | Yes     | Yes  | Yes           | Yes           |
 |                               | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes  | Yes           | Yes           |
@@ -90,6 +90,7 @@ where:
 - `/'.+?'/`: is a specific string property.
 - `/@@.+?/`: is a specific [well-known symbol].
 - `<n>`: is any numeric property.
+- `<k>`: is any property.
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
@@ -131,21 +132,21 @@ where:
 The table below lists evaluated sections in the ECMAScript spec which were
 deemed unaffected by prototype pollution.
 
-| API                                    | Property       | Reason                                                                                                              |
-| -------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [`CopyDataProperties`][i0001]          | `<key>`        | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
-| [`OrdinaryHasInstance`][i0002]         | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`HasBinding`][i0003]                  | `@@unscopable` | _Not evaluated_                                                                                                     |
-|                                        | `<N>`          | _Not evaluated_                                                                                                     |
-| [`GetBindingValue`][i0004]             | `<N>`          | Checks `HasProperty` before `Get`.                                                                                  |
-| [`GetPrototypeFromConstructor`][i0005] | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`ArraySpeciesCreate`][i0006]          | `constructor`  | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
-|                                        | `@@species`    | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
-| [`[[GetOwnProperty]]`][i0007]          | `<P>`          | _Not evaluated_                                                                                                     |
-| [`[[DefineOwnProperty]]`][i0008]       | `<P>`          | _Not evaluated_                                                                                                     |
-| [`[[Get]]`][i0009]                     | `<P>`          | _Not evaluated_                                                                                                     |
-| [`Object.assign`][i0010]               | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
-| [`ObjectDefineProperties`][i0011]      | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| API                                    | Property        | Reason                                                                                                              |
+| -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
+| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                     |
+|                                        | `<n>`           | _Not evaluated_                                                                                                     |
+| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                  |
+| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
+|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
+| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                     |
+| [`[[DefineOwnProperty]]`][i0008]       | `<k>`           | _Not evaluated_                                                                                                     |
+| [`[[Get]]`][i0009]                     | `<k>`           | _Not evaluated_                                                                                                     |
+| [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
 [i0002]: https://tc39.es/ecma262/#sec-ordinaryhasinstance
