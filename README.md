@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 # Prototype Pollution affects the JavaScript Runtime
 
 This repository aims to provide a list of JavaScript language functionality that
@@ -5,15 +7,17 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec](https://tc39.es/ecma262), currently at `Get(` 38/160.
+- Continue in the [spec], currently at `Get(` 38/160.
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
+- Replicate `Reflect.ownKeys`' gadget with other uses of `[[OwnPropertyKeys]]`.
 
 ## Reproduce
 
 To reproduce the results
 
-- for Node.js: `make test-node`
-- for Browsers: `make test-web` and open <http://localhost:8080/web> in a browser.
+- for Node.js: `make test-node` (or `make test-node-docker`)
+- for Node.js: `make test-deno` (or `make test-deno-docker`)
+- for Browsers: `make test-web` and open <http://localhost:8080> in a browser.
 
 ## Overview
 
@@ -43,52 +47,60 @@ language design.
 All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
 v129, and Firefox (Desktop) v131.
 
-| API                           | Prop(s)                             | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
-| ----------------------------- | ----------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
-| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `[[ToPrimitive]]`             | [`toString`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`valueOf`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `new ArrayBuffer`             | [`maxByteLength`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.from`                  | [`<n>`][o0044]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Function.prototype.apply`    | [`<n>`][o0005]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Iterator`                    | [`done`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`next`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`value`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `JSON.stringify`              | [`toObject`][o0025]                 | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.defineProperty`       | [`configurable`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`enumerable`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`get`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`set`][o0010]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`value`][o0011]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`writable`][o0012]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.entries`              | [`enumerable`][o0013]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.fromEntries`          | [`0,1`][o0014]                      | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.keys`                 | [`enumerable`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.prototype.toString`   | [`@@toStringTag`][o0034]            | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.values`               | [`enumerable`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new Proxy`                   | [`apply`][o0040]                    | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`deleteProperty`][o0041]           | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`getOwnPropertyDescriptor`][o0038] | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`isExtensible`][o0042]             | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`ownKeys`][o0037]                  | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`set`][o0036]                      | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.apply`               | [`<n>`][o0017]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.construct`           | [`<n>`][o0018]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.defineProperty`      | [`configurable`][o0026]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`enumerable`][o0027]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`get`][o0028]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`set`][o0029]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`value`][o0030]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                               | [`writable`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `new RegExp`                  | [`source`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new SharedArrayBuffer`       | [`maxByteLength`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
-| `Set.prototype.contains`      | [`has,size`][o0035]                 | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.endsWith`   | [`@@match`][o0020]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.includes`   | [`@@match`][o0021]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.matchAll`   | [`@@match,@@matchAll,flags`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.replaceAll` | [`@@match,@@replace,flags`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.startsWith` | [`@@match`][o0024]                  | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `with`                        | [`@@unscopables`][o0043]            | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
+| API                           | Prop(s)                               | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
+| ----------------------------- | ------------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
+| `[[OwnPropertyKeys]]`         | [`<n>`][o0001]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `[[ToPrimitive]]`             | [`'toString'`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'valueOf'`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `new ArrayBuffer`             | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.from`                  | [`<n>`][o0044]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Function.prototype.apply`    | [`<n>`][o0005]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Iterator`                    | [`'done'`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'value'`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `JSON.stringify`              | [`'toObject'`][o0025]                 | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.defineProperty`       | [`'configurable'`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'enumerable'`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'get'`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'set'`][o0010]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'value'`][o0011]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'writable'`][o0012]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.entries`              | [`'enumerable'`][o0013]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.fromEntries`          | [`0,1`][o0014]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.keys`                 | [`'enumerable'`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.prototype.toString`   | [`@@toStringTag`][o0034]              | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.values`               | [`'enumerable'`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `new Proxy`                   | [`'apply'`][o0040]                    | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'deleteProperty'`][o0041]           | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'getOwnPropertyDescriptor'`][o0038] | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'isExtensible'`][o0042]             | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'ownKeys'`][o0037]                  | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'set'`][o0036]                      | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.apply`               | [`<n>`][o0017]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.construct`           | [`<n>`][o0018]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Reflect.defineProperty`      | [`'configurable'`][o0026]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'enumerable'`][o0027]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'get'`][o0028]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'set'`][o0029]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'value'`][o0030]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                               | [`'writable'`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `new RegExp`                  | [`'source'`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `new SharedArrayBuffer`       | [`'maxByteLength'`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
+| `Set.prototype.contains`      | [`'has','size'`][o0035]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.endsWith`   | [`@@match`][o0020]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.includes`   | [`@@match`][o0021]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.matchAll`   | [`@@match,@@matchAll,'flags'`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.replaceAll` | [`@@match,@@replace,'flags'`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.prototype.startsWith` | [`@@match`][o0024]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `with`                        | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
+
+where:
+
+- `/[0-9]+/`: is a specific numeric property.
+- `/'.+?'/`: is a specific string property.
+- `/@@.+?/`: is a specific [well-known symbol].
+- `<n>`: is any numeric property.
+- `<k>`: is any property.
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
@@ -140,22 +152,22 @@ v129, and Firefox (Desktop) v131.
 The table below lists evaluated sections in the ECMAScript spec which were
 deemed unaffected by prototype pollution.
 
-| API                                    | Property       | Reason                                                                                                              |
-| -------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [`CopyDataProperties`][i0001]          | `<key>`        | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
-| [`OrdinaryHasInstance`][i0002]         | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`HasBinding`][i0003]                  | `@@unscopable` | _Not evaluated_                                                                                                     |
-|                                        | `<N>`          | _Not evaluated_                                                                                                     |
-| [`GetBindingValue`][i0004]             | `<N>`          | Checks `HasProperty` before `Get`.                                                                                  |
-| [`GetPrototypeFromConstructor`][i0005] | `prototype`    | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`ArraySpeciesCreate`][i0006]          | `constructor`  | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
-|                                        | `@@species`    | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
-| [`[[GetOwnProperty]]`][i0007]          | `<P>`          | _Not evaluated_                                                                                                     |
-| [`[[DefineOwnProperty]]`][i0008]       | `<P>`          | _Not evaluated_                                                                                                     |
-| [`[[Get]]`][i0009]                     | `<P>`          | _Not evaluated_                                                                                                     |
-| [`Object.assign`][i0010]               | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
-| [`ObjectDefineProperties`][i0011]      | `<key>`        | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
-| [`RegExp.prototype.toString`][i0012]   | `source`       | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                  |
+| API                                    | Property        | Reason                                                                                                              |
+| -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
+| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                     |
+|                                        | `<n>`           | _Not evaluated_                                                                                                     |
+| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                  |
+| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
+|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
+| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                     |
+| [`[[DefineOwnProperty]]`][i0008]       | `<k>`           | _Not evaluated_                                                                                                     |
+| [`[[Get]]`][i0009]                     | `<k>`           | _Not evaluated_                                                                                                     |
+| [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`RegExp.prototype.toString`][i0012]   | `'source'`      | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                  |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
 [i0002]: https://tc39.es/ecma262/#sec-ordinaryhasinstance
@@ -205,3 +217,6 @@ const proxy = new Proxy({}, {
   Toolchain to find prototype pollution and gadgets in libraries and the Node.js
   runtime. It cannot find the gadgets described in this repository because it
   cannot statically analyze built-in functionality.
+
+[spec]: https://tc39.es/ecma262 "ECMAScript Language Specification"
+[well-known symbol]: https://tc39.es/ecma262/#sec-well-known-symbols "ECMAScript Well-Known Symbols"

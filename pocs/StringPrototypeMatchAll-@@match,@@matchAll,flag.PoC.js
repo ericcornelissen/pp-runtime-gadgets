@@ -1,23 +1,23 @@
-/*
-Explanation:
-When using `matchAll` on a string, the provided object may be a string or a
-regular expression, including a custom regular expression implementation. Any
-object with the `Symbol.match` property is considered a regular expression. If
-this is set alone, a type error will be thrown because for `matchAll` the regexp
-flags must include the "g" flag, hence `flags` must be polluted too. Finally,
-`matchAll` will use the function at `Symbol.matchAll` to perform the matching,
-hence this key must be polluted too.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-isregexp
-2. https://tc39.es/ecma262/#sec-string.prototype.matchall
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const value = "Hello world!";
 
 export const about = {
 	function: "String.prototype.matchAll",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll",
 	properties: ["@@match", "@@matchAll", "'flag'"],
+	description: `
+When using matchAll on a string, the provided object may be a string or a
+regular expression, including a custom regular expression implementation. Any
+object with the Symbol.match property is considered a regular expression. If
+this is set alone, a type error will be thrown because for matchAll the regexp
+flags must include the "g" flag, hence 'flags' must be polluted too. Finally,
+matchAll will use the function at Symbol.matchAll to perform the matching,
+hence this key must be polluted too.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-string.prototype.matchall",
+		"https://tc39.es/ecma262/#sec-isregexp",
+	],
 };
 
 export function prerequisite() {

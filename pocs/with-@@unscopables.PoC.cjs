@@ -1,13 +1,4 @@
-/*
-Explanation:
-The @@unscopables object is used by the `with` statement to determine what
-properties of the context object are available inside the `with` block. If not
-specified, the @@unscopables can be polluted to manipulate the available
-properties in the context.
-
-test262:
-- test/built-ins/Proxy/has/return-true-target-prop-exists-using-with.js
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const value = "bar";
 const property = "foo";
@@ -15,7 +6,16 @@ const context = { [property]: value };
 
 const about = {
 	function: "with",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with",
 	properties: ["@@unscopables"],
+	description: `
+The @@unscopables object is used by the 'with' statement to determine what
+properties of the context object are available inside the 'with' block. If not
+specified, the @@unscopables can be polluted to manipulate the available
+properties in the context.`,
+	test262: new Set([
+		"test/built-ins/Proxy/has/return-true-target-prop-exists-using-with.js",
+	]),
 };
 
 function prerequisite() {

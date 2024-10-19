@@ -1,20 +1,21 @@
-/*
-
-Explanation:
-To get the union of two sets the `contains` function first checks the `size` of
-the Set (or rather any object) and it will then check if the provided Set `has`
-the element of the `this` Set. By polluting
-
-test262:
-- tc39/test262/test/built-ins/Set/prototype/union/array-throws.js
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const set1 = new Set([1, 2]);
 const set2 = [3];
 
 export const about = {
 	function: "Set.prototype.union",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/union",
 	properties: ["'has'", "'size'"],
+	description: `
+To get the union of two sets the 'contains' function first checks the 'size' of
+the Set (or rather any object) and it will then check if the provided Set 'has'
+the element of the 'this' Set. By polluting the 'size' to be greater than the
+array length and 'has' to always return false, all objects from the non-set
+object will be added to the first set.`,
+	test262: new Set([
+		"tc39/test262/test/built-ins/Set/prototype/union/array-throws.js",
+	]),
 };
 
 export function prerequisite() {

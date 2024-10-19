@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT-0
+
 test-node:
 	@echo "== RUNTIME =="
 	@node --version
@@ -31,9 +33,14 @@ test-deno-docker:
 deploy-web:
 	@rm -rf ./_site/
 	@mkdir ./_site/
-	@cp -r ./pocs ./_site/pocs
-	@cp -r ./runners ./_site/runners
-	@cp ./web/index.html ./_site/index.html
+	@cp -r ./pocs/ ./_site/pocs
+	@cp -r ./runners/ ./_site/runners
+	@cp ./web/* ./_site/
+	@cp ./LICENSE.md ./_site/LICENSE
 
 test-web: deploy-web
 	@cd ./_site/ && python3 -m http.server 8080
+
+clean:
+	@git clean -fx \
+		_site/

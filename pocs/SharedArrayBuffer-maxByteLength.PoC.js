@@ -1,20 +1,20 @@
-/*
-Explanation:
-When an SharedSharedSharedArrayBuffer is constructed it optionally accepts a maximum length
-(in bytes). If not explicitly set on the `options` object, it may read from the
-prototype chain.
-
-Specification:
-1. https://tc39.es/ecma262/#sec-getSharedSharedArrayBuffermaxbytelengthoption
-2. https://tc39.es/ecma262/#sec-sharedSharedSharedArrayBuffer-length
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const length = 8;
 const maxByteLength = 7;
 
 export const about = {
 	function: "new SharedArrayBuffer()",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer",
 	properties: ["'maxByteLength'"],
+	description: `
+When an SharedSharedSharedArrayBuffer is constructed it optionally accepts a maximum length
+(in bytes). If not explicitly set on the 'options' object, it may read from the
+prototype chain.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-sharedSharedSharedArrayBuffer-length",
+		"https://tc39.es/ecma262/#sec-getSharedSharedArrayBuffermaxbytelengthoption",
+	],
 };
 
 export function prerequisite() {

@@ -1,18 +1,18 @@
-/*
-Explanation:
+// SPDX-License-Identifier: BlueOak-1.0.0
+
+export const about = {
+	function: "new Proxy()",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy",
+	properties: ["'set'"],
+	description: `
 To create a Proxy users need to provide an object as a second argument. This
 object allows specifying a myriad of traps. Usually, if a specific trap is not
 specified it is not used and usual behavior is maintained. However, if any of
 the traps is present on the prototype it will be used. This is also the case for
-proxies created *before* the pollution happened.
-
-test262:
-- test/built-ins/Object/prototype/__proto__/set-abrupt.js
-*/
-
-export const about = {
-	function: "new Proxy()",
-	properties: ["'set'"],
+proxies created *before* the pollution happened.`,
+	test262: new Set([
+		"test/built-ins/Object/prototype/__proto__/set-abrupt.js",
+	]),
 };
 
 export function prerequisite() {

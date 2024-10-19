@@ -1,4 +1,5 @@
-import * as OwnPropertyKeysN from "./[[OwnPropertyKeys]]-<n>.PoC.js";
+// SPDX-License-Identifier: BlueOak-1.0.0
+
 import * as ToPrimitiveToString from "./[[ToPrimitive]]-toString.PoC.js";
 import * as ToPrimitiveValueOf from "./[[ToPrimitive]]-valueOf.PoC.js";
 import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
@@ -33,6 +34,7 @@ import * as ReflectDefinePropertyGet from "./ReflectDefineProperty-get.PoC.js";
 import * as ReflectDefinePropertySet from "./ReflectDefineProperty-set.PoC.js";
 import * as ReflectDefinePropertyValue from "./ReflectDefineProperty-value.PoC.js";
 import * as ReflectDefinePropertyWritable from "./ReflectDefineProperty-writable.PoC.js";
+import * as ReflectOwnKeysN from "./ReflectOwnKeys-<n>.PoC.js";
 import * as RegExpSource from "./RegExp-source.PoC.js";
 import * as SharedArrayBufferMaxByteLength from "./SharedArrayBuffer-maxByteLength.PoC.js";
 import * as SetPrototypeUnionHasSize from "./SetPrototypeUnion-has,size.PoC.js";
@@ -43,7 +45,6 @@ import * as StringPrototypeReplaceAllMatchReplaceFlag from "./StringPrototypeRep
 import * as StringPrototypeStartsWithSymbolMatch from "./StringPrototypeStartsWith-@@match.PoC.js";
 
 export const tests = [
-	OwnPropertyKeysN,
 	ToPrimitiveToString,
 	ToPrimitiveValueOf,
 	FunctionPrototypeApplyN,
@@ -78,6 +79,7 @@ export const tests = [
 	ReflectDefinePropertySet,
 	ReflectDefinePropertyValue,
 	ReflectDefinePropertyWritable,
+	ReflectOwnKeysN,
 	RegExpSource,
 	SharedArrayBufferMaxByteLength,
 	SetPrototypeUnionHasSize,

@@ -1,12 +1,4 @@
-/*
-Explanation:
-When an ArrayBuffer is constructed it optionally accepts a maximum length (in
-bytes). If not explicitly set on the `options` object, it may read from the
-prototype chain.
-
-test262:
-- test/built-ins/Array/from/source-object-length-set-elem-prop-err.js
-*/
+// SPDX-License-Identifier: BlueOak-1.0.0
 
 const value = "foobar";
 const arrayLike = {
@@ -15,7 +7,15 @@ const arrayLike = {
 
 export const about = {
 	function: "Array.from",
+	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from",
 	properties: ["<n>"],
+	description: `
+When Array.from is given an array-like object it assumes the length is correct
+and all indices from 0 to length are present. If this is not the case a polluted
+index will be used.`,
+	test262: new Set([
+		"test/built-ins/Array/from/source-object-length-set-elem-prop-err.js",
+	]),
 };
 
 export function prerequisite() {
