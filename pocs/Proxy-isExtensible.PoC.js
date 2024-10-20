@@ -15,6 +15,13 @@ specified it is not used and usual behavior is maintained. However, if any of
 the traps is present on the prototype it will be used. This is also the case for
 proxies created *before* the pollution happened.`,
 	test262: new Set([
+		"test/built-ins/Array/prototype/lastIndexOf/calls-only-has-on-prototype-after-length-zeroed.js",
+		"test/built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js",
+		"test/built-ins/Proxy/has/call-in-prototype-index.js",
+		"test/built-ins/Proxy/set/call-parameters-prototype-index.js",
+		"test/built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js",
+		"test/built-ins/Object/isSealed/proxy-no-ownkeys-returned-keys-order.js",
+		"test/built-ins/Object/isFrozen/proxy-no-ownkeys-returned-keys-order.js",
 		"test/built-ins/Proxy/setPrototypeOf/return-abrupt-from-target-getprototypeof.js",
 	]),
 };

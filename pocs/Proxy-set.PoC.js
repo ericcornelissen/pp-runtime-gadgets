@@ -11,7 +11,17 @@ specified it is not used and usual behavior is maintained. However, if any of
 the traps is present on the prototype it will be used. This is also the case for
 proxies created *before* the pollution happened.`,
 	test262: new Set([
+		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-missing-target-is-proxy.js",
+		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-null-target-is-proxy.js",
+		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined-target-is-proxy.js",
+		"test/built-ins/Object/values/order-after-define-property.js",
+		"test/built-ins/Array/prototype/splice/create-proxy.js",
+		"test/built-ins/Proxy/set/trap-is-undefined-no-property.js",
 		"test/built-ins/Object/prototype/__proto__/set-abrupt.js",
+		"test/built-ins/Proxy/defineProperty/targetdesc-undefined-target-is-not-extensible-realm.js",
+		"test/built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls-index.js",
+		"test/built-ins/Proxy/set/trap-is-missing-receiver-multiple-calls.js",
+		"test/built-ins/Proxy/set/trap-is-null-receiver.js",
 	]),
 };
 

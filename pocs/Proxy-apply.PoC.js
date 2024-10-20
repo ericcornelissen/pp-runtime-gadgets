@@ -18,6 +18,13 @@ proxies created *before* the pollution happened.
 Note that this does requires the proxy is on a function, it cannot make
 non-function objects callable.`,
 	test262: new Set([
+		"test/built-ins/Array/prototype/lastIndexOf/calls-only-has-on-prototype-after-length-zeroed.js",
+		"test/built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js",
+		"test/built-ins/Proxy/has/call-in-prototype-index.js",
+		"test/built-ins/Proxy/set/call-parameters-prototype-index.js",
+		"test/built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js",
+		"test/built-ins/Proxy/create-target-is-not-a-constructor.js",
+		"test/built-ins/Proxy/apply/trap-is-null-target-is-proxy.js",
 		"test/built-ins/Proxy/apply/trap-is-undefined-no-property.js",
 	]),
 };

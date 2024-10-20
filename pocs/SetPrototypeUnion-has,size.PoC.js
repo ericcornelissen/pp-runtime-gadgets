@@ -8,13 +8,13 @@ export const about = {
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/union",
 	properties: ["'has'", "'size'"],
 	description: `
-To get the union of two sets the 'contains' function first checks the 'size' of
-the Set (or rather any object) and it will then check if the provided Set 'has'
-the element of the 'this' Set. By polluting the 'size' to be greater than the
-array length and 'has' to always return false, all objects from the non-set
-object will be added to the first set.`,
+To get the union of two sets the function first checks the 'size' of the Set (or
+rather any object) and it will then check if the provided Set 'has' the element
+of the 'this' Set. By polluting the 'size' to be greater than the array length
+and 'has' to always return false, all objects from the non-set object will be
+added to the first set.`,
 	test262: new Set([
-		"tc39/test262/test/built-ins/Set/prototype/union/array-throws.js",
+		"test/built-ins/Set/prototype/union/array-throws.js",
 	]),
 };
 

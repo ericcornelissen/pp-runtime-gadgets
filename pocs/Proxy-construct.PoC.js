@@ -2,12 +2,12 @@
 
 const property = "foo";
 const value = "bar";
-const object = { [property]: value };
+const ctor = function() {this[property] = value};
 
 export const about = {
 	function: "new Proxy()",
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy",
-	properties: ["'deleteProperty'"],
+	properties: ["'construct'"],
 	description: `
 To create a Proxy users need to provide an object as a second argument. This
 object allows specifying a myriad of traps. Usually, if a specific trap is not
@@ -19,17 +19,16 @@ proxies created *before* the pollution happened.`,
 		"test/built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js",
 		"test/built-ins/Proxy/has/call-in-prototype-index.js",
 		"test/built-ins/Proxy/set/call-parameters-prototype-index.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-missing-target-is-proxy.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-null-target-is-proxy.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined-target-is-proxy.js",
-		"test/built-ins/Proxy/deleteProperty/trap-is-undefined-not-strict.js",
+		"test/built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js",
+		"test/built-ins/Function/internals/Construct/base-ctor-revoked-proxy-realm.js",
+		"test/built-ins/Function/internals/Construct/base-ctor-revoked-proxy.js",
 	]),
 };
 
 export function prerequisite() {
-	const subject = new Proxy(object, {});
-	const got = subject[property];
-	if (got === value) {
+	const Subject = new Proxy(ctor, {});
+	const got = new Subject();
+	if (got[property] === value) {
 		return [true, null];
 	} else {
 		return [false, `got ${got}`];
@@ -37,15 +36,15 @@ export function prerequisite() {
 }
 
 export function test() {
-	const subject = new Proxy(object, {});
+	const Subject = new Proxy(ctor, {});
 
 	let flag = false;
-	Object.prototype.deleteProperty = () => {
+	Object.prototype.construct = (target, argumentsList, newTarget) => {
 		flag = true;
-		return true;
+		return Reflect.construct(target, argumentsList, newTarget);
 	};
 
-	delete subject[property];
+	new Subject();
 	return flag;
 }
 

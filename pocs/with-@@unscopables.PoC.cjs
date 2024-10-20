@@ -14,6 +14,7 @@ properties of the context object are available inside the 'with' block. If not
 specified, the @@unscopables can be polluted to manipulate the available
 properties in the context.`,
 	test262: new Set([
+		"test/built-ins/Proxy/has/call-with.js",
 		"test/built-ins/Proxy/has/return-true-target-prop-exists-using-with.js",
 	]),
 };

@@ -1,13 +1,9 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
-const property = "foo";
-const value = "bar";
-const object = { [property]: value };
-
 export const about = {
 	function: "new Proxy()",
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy",
-	properties: ["'deleteProperty'"],
+	properties: ["'preventExtensions'"],
 	description: `
 To create a Proxy users need to provide an object as a second argument. This
 object allows specifying a myriad of traps. Usually, if a specific trap is not
@@ -19,36 +15,38 @@ proxies created *before* the pollution happened.`,
 		"test/built-ins/Array/prototype/indexOf/calls-only-has-on-prototype-after-length-zeroed.js",
 		"test/built-ins/Proxy/has/call-in-prototype-index.js",
 		"test/built-ins/Proxy/set/call-parameters-prototype-index.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-missing-target-is-proxy.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-null-target-is-proxy.js",
-		"test/built-ins/Proxy/getOwnPropertyDescriptor/trap-is-undefined-target-is-proxy.js",
-		"test/built-ins/Proxy/deleteProperty/trap-is-undefined-not-strict.js",
+		"test/built-ins/Array/prototype/reverse/length-exceeding-integer-limit-with-proxy.js",
+		"test/built-ins/Object/freeze/proxy-no-ownkeys-returned-keys-order.js",
+		"test/built-ins/Object/freeze/proxy-with-defineProperty-handler.js",
+		"test/built-ins/Object/seal/proxy-no-ownkeys-returned-keys-order.js",
+		"test/built-ins/Object/seal/proxy-with-defineProperty-handler.js",
+		"test/built-ins/Object/seal/seal-proxy.js",
 	]),
 };
 
 export function prerequisite() {
-	const subject = new Proxy(object, {});
-	const got = subject[property];
-	if (got === value) {
+	const subject = Object.seal(new Proxy({}, {}));
+	try {
+		subject.foo = "bar";
+		return [false, "unexpected success"];
+	} catch(_) {
 		return [true, null];
-	} else {
-		return [false, `got ${got}`];
 	}
 }
 
 export function test() {
-	const subject = new Proxy(object, {});
+	const subject = new Proxy({}, {});
 
 	let flag = false;
-	Object.prototype.deleteProperty = () => {
+	Object.prototype.preventExtensions = (obj) => {
 		flag = true;
-		return true;
+		return Reflect.preventExtensions(obj);
 	};
 
-	delete subject[property];
+	Object.seal(subject);
 	return flag;
 }
 
 export function cleanup() {
-	delete Object.prototype.deleteProperty;
+	delete Object.prototype.getOwnPropertyDescriptor;
 }

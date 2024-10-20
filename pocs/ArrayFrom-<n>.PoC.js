@@ -14,6 +14,8 @@ When Array.from is given an array-like object it assumes the length is correct
 and all indices from 0 to length are present. If this is not the case a polluted
 index will be used.`,
 	test262: new Set([
+		"test/built-ins/Array/from/Array.from_forwards-length-for-array-likes.js",
+		"test/built-ins/Array/from/array-like-has-length-but-no-indexes-with-values.js",
 		"test/built-ins/Array/from/source-object-length-set-elem-prop-err.js",
 	]),
 };
