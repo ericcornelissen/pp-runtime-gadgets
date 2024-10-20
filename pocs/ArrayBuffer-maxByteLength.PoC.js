@@ -15,6 +15,9 @@ prototype chain.`,
 		"https://tc39.es/ecma262/#sec-arraybuffer-length",
 		"https://tc39.es/ecma262/#sec-getarraybuffermaxbytelengthoption",
 	],
+	test262: new Set([
+		"test/built-ins/ArrayBuffer/options-maxbytelength-undefined.js",
+	]),
 };
 
 export function prerequisite() {

@@ -28,6 +28,9 @@ hierarchy instead.`,
 	spectrace: [
 		"https://tc39.es/ecma262/#sec-iteratorcomplete",
 	],
+	test262: new Set([
+		"test/built-ins/Array/from/iter-get-iter-val-err.js",
+	]),
 };
 
 export function prerequisite() {

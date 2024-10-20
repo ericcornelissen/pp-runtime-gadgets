@@ -15,6 +15,9 @@ prototype chain.`,
 		"https://tc39.es/ecma262/#sec-sharedSharedSharedArrayBuffer-length",
 		"https://tc39.es/ecma262/#sec-getSharedSharedArrayBuffermaxbytelengthoption",
 	],
+	test262: new Set([
+		"test/built-ins/SharedArrayBuffer/options-maxbytelength-undefined.js",
+	]),
 };
 
 export function prerequisite() {

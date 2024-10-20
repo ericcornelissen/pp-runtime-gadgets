@@ -25,6 +25,10 @@ hierarchy instead.`,
 	spectrace: [
 		"https://tc39.es/ecma262/#sec-iteratorvalue",
 	],
+	test262: new Set([
+		"test/built-ins/Array/from/iter-set-elem-prop-err.js",
+		"test/built-ins/Array/from/iter-set-length.js",
+	]),
 };
 
 export function prerequisite() {
