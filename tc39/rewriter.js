@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BlueOak-1.0.0
+
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as process from "node:process";

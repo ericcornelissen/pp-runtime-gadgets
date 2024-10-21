@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+
 # `test262` for finding gadgets
 
 The contents of this directory use the [`tc39/test262`] suite to help find
@@ -18,6 +20,7 @@ with `--recurse-submodules` or run `git submodule update --init` separately.
 To run the analysis locally invoke:
 
 ```shell
+npm install --ignore-scripts
 ./run.sh
 ```
 

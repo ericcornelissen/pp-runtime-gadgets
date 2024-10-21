@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: BlueOak-1.0.0
 
 set -eo pipefail
 
@@ -25,6 +26,5 @@ node ../to-sarif.js "${JSON_FILE}" "${SARIF_FILE}"
 
 echo
 echo '========= RESETTING =========='
-cd test262
 git reset --hard
 cd ..

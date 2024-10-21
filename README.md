@@ -13,10 +13,10 @@ can be affected by prototype pollution.
 
 ## Reproduce
 
-To reproduce the results
+To reproduce the results:
 
 - for Node.js: `make test-node` (or `make test-node-docker`)
-- for Node.js: `make test-deno` (or `make test-deno-docker`)
+- for Deno: `make test-deno` (or `make test-deno-docker`)
 - for Browsers: `make test-web` and open <http://localhost:8080> in a browser.
 
 ## Overview
@@ -80,7 +80,7 @@ v129, and Firefox (Desktop) v131.
 |                                     | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'return'`][o0064]                   | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'value'`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `JSON.stringify`                    | [`'toObject'`][o0025]                 | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `JSON.stringify`                    | [`'toJSON'`][o0025]                   | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.defineProperty`             | [`'configurable'`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'enumerable'`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'get'`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
