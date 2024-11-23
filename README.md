@@ -7,7 +7,7 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec], currently at `Get(` 38/160.
+- Continue in the [spec] ([fixed reference]), currently at `Get(` 51/160.
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
 - Replicate `Reflect.ownKeys`' gadget with other uses of `[[OwnPropertyKeys]]`.
 
@@ -51,6 +51,7 @@ v129, and Firefox (Desktop) v131.
 | ----------------------------------- | ------------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
 | `[[ToPrimitive]]`                   | [`'toString'`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'valueOf'`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `new AggregateError`                | [`'cause'`][o0080]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `new ArrayBuffer`                   | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.from`                        | [`<n>`][o0044]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.at`                | [`<n>`][o0046]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
@@ -75,7 +76,9 @@ v129, and Firefox (Desktop) v131.
 | `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.with`              | [`<n>`][o0045]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `new Error`                         | [`'cause'`][o0079]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Function.prototype.apply`          | [`<n>`][o0005]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Function.prototype.bind`           | [`'name'`][o0078]                     | `1`   | `3`  | No      | No             | No            | No            |
 | `Iterator`                          | [`'done'`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'return'`][o0064]                   | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
@@ -124,6 +127,7 @@ v129, and Firefox (Desktop) v131.
 | `String.prototype.matchAll`         | [`@@match,@@matchAll,'flags'`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.replaceAll`       | [`@@match,@@replace,'flags'`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.startsWith`       | [`@@match`][o0024]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `String.raw`                        | [`'raw'`][o0081]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `TypedArray`                        | [`<n>`][o0068]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `with`                              | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
 
@@ -212,6 +216,10 @@ where:
 [o0075]: ./pocs/Proxy-setPrototypeOf.PoC.js
 [o0076]: ./pocs/ArrayPrototypeSplice-<n>.PoC.js
 [o0077]: ./pocs/ArrayPrototypeCopyWithin-<n>.PoC.js
+[o0078]: ./pocs/FunctionPrototypeBind-name.PoC.js
+[o0079]: ./pocs/Error-cause.PoC.js
+[o0080]: ./pocs/AggregateError-cause.PoC.js
+[o0081]: ./pocs/StringRaw-raw.PoC.js
 
 ## Unaffected
 
@@ -220,19 +228,23 @@ deemed unaffected by prototype pollution.
 
 | API                                    | Property        | Reason                                                                                                              |
 | -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
-| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                     |
-|                                        | `<n>`           | _Not evaluated_                                                                                                     |
-| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                  |
-| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
-|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
-| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                     |
 | [`[[DefineOwnProperty]]`][i0008]       | `<k>`           | _Not evaluated_                                                                                                     |
 | [`[[Get]]`][i0009]                     | `<k>`           | _Not evaluated_                                                                                                     |
+| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                     |
+| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
+|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
+| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                     |
+|                                        | `<n>`           | _Not evaluated_                                                                                                     |
+| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
+| [`Error.prototype.toString`][i0014]    | `'name'`        | `this` will realistically only be an instance of Error, in which case `name` is defined on `Error.prototype`.       |
+|                                        | `'message'`     | `this` will realistically only be an instance of Error, in which case `message` is defined on `Error.prototype`.    |
+| [`Function.prototype.bind`][i0013]     | `'length'`      | It is checked that the property is an own property before it is accessed.                                           |
+| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                  |
+| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
+| [`GetSubstitution`][i0015]             | `<k>`           | Getting properties on the `namedCapture` object which always has a `null` prototype.                                |
 | [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
 | [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
+| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
 | [`RegExp.prototype.toString`][i0012]   | `'source'`      | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                  |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
@@ -247,6 +259,9 @@ deemed unaffected by prototype pollution.
 [i0010]: https://tc39.es/ecma262/#sec-object.assign
 [i0011]: https://tc39.es/ecma262/#sec-objectdefineproperties
 [i0012]: https://tc39.es/ecma262/#sec-regexp.prototype.tostring
+[i0013]: https://tc39.es/ecma262/#sec-function.prototype.bind
+[i0014]: https://tc39.es/ecma262/#sec-error.prototype.tostring
+[i0015]:https://tc39.es/ecma262/#sec-getsubstitution
 
 ## Approach
 
@@ -299,5 +314,6 @@ const proxy = new Proxy({}, {
   runtime. It cannot find the gadgets described in this repository because it
   cannot statically analyze built-in functionality.
 
+[fixed reference]: ./spec-reference.html
 [spec]: https://tc39.es/ecma262 "ECMAScript Language Specification"
 [well-known symbol]: https://tc39.es/ecma262/#sec-well-known-symbols "ECMAScript Well-Known Symbols"

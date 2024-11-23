@@ -2,7 +2,7 @@
 
 import * as ToPrimitiveToString from "./[[ToPrimitive]]-toString.PoC.js";
 import * as ToPrimitiveValueOf from "./[[ToPrimitive]]-valueOf.PoC.js";
-import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
+import * as AggregateErrorCause from "./AggregateError-cause.PoC.js";
 import * as ArrayBufferMaxByteLength from "./ArrayBuffer-maxByteLength.PoC.js";
 import * as ArrayFromN from "./ArrayFrom-<n>.PoC.js";
 import * as ArrayPrototypeAtN from "./ArrayPrototypeAt-<n>.PoC.js";
@@ -28,6 +28,9 @@ import * as ArrayPrototypeToReversedN from "./ArrayPrototypeToReversed-<n>.PoC.j
 import * as ArrayPrototypeToSortedN from "./ArrayPrototypeToSorted-<n>.PoC.js";
 import * as ArrayPrototypeToSplicedN from "./ArrayPrototypeToSpliced-<n>.PoC.js";
 import * as ArrayPrototypeWithN from "./ArrayPrototypeWith-<n>.PoC.js";
+import * as ErrorCause from "./Error-cause.PoC.js";
+import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
+import * as FunctionPrototypeBindName from "./FunctionPrototypeBind-name.PoC.js";
 import * as IteratorDone from "./Iterator-done.PoC.js";
 import * as IteratorNext from "./Iterator-next.PoC.js";
 import * as IteratorReturn from "./Iterator-return.PoC.js";
@@ -76,12 +79,13 @@ import * as StringPrototypeIncludesSymbolMatch from "./StringPrototypeIncludes-@
 import * as StringPrototypeMatchAllMatchMatchAllFlag from "./StringPrototypeMatchAll-@@match,@@matchAll,flag.PoC.js";
 import * as StringPrototypeReplaceAllMatchReplaceFlag from "./StringPrototypeReplaceAll-@@match,@@replace,flag.PoC.js";
 import * as StringPrototypeStartsWithSymbolMatch from "./StringPrototypeStartsWith-@@match.PoC.js";
+import * as StringRawRaw from "./StringRaw-raw.PoC.js";
 import * as TypedArrayN from "./TypedArrayFrom-<n>.PoC.js";
 
 export const tests = [
 	ToPrimitiveToString,
 	ToPrimitiveValueOf,
-	FunctionPrototypeApplyN,
+	AggregateErrorCause,
 	ArrayBufferMaxByteLength,
 	ArrayFromN,
 	ArrayPrototypeAtN,
@@ -107,6 +111,9 @@ export const tests = [
 	ArrayPrototypeToSortedN,
 	ArrayPrototypeToSplicedN,
 	ArrayPrototypeWithN,
+	ErrorCause,
+	FunctionPrototypeApplyN,
+	FunctionPrototypeBindName,
 	IteratorDone,
 	IteratorNext,
 	IteratorReturn,
@@ -155,5 +162,6 @@ export const tests = [
 	StringPrototypeMatchAllMatchMatchAllFlag,
 	StringPrototypeReplaceAllMatchReplaceFlag,
 	StringPrototypeStartsWithSymbolMatch,
+	StringRawRaw,
 	TypedArrayN,
 ];
