@@ -263,15 +263,20 @@ deemed unaffected by prototype pollution.
 [i0014]: https://tc39.es/ecma262/#sec-error.prototype.tostring
 [i0015]:https://tc39.es/ecma262/#sec-getsubstitution
 
-## Approach
+## Methodology
 
-So far this overview has been created manually by inspecting the ECMAScript spec
+Two approaches have been used to compile the list of usable and unusable runtime
+gadgets.
+
+### Manual (in progress)
+
+A manual review of the ECMAScript [spec] has been conducted, specifically
 looking for use of the `Get(O, P)` function. This function gets property `P`
 from object `O`, hence if `P` is missing from `O` the lookup could be affected
 by prototype pollution.
 
-Additionally, during testing a proxy object like the one shown below is used to
-find out what properties are being looked up exactly.
+During manual testing, a proxy object like the one shown below is used to find
+out what properties are being looked up exactly.
 
 ```javascript
 const proxy = new Proxy({}, {
@@ -284,6 +289,17 @@ const proxy = new Proxy({}, {
   },
 });
 ```
+
+### `tc39/test262`
+
+The [tc39/test262] suite is an extensive conformance test suite for the
+ECMAScript specification. Hence, it should provide extensive coverage of all
+JavaScript language features, and can thus be used to help automatically find
+gadgets.
+
+The [tc39](./tc39/) directory contains the materials necessary for using the
+test262 suite in a semi-automated pipeline for finding runtime gadgets. More
+detail can be found in its `README.md`.
 
 ## Related Work
 
@@ -316,4 +332,5 @@ const proxy = new Proxy({}, {
 
 [fixed reference]: ./spec-reference.html
 [spec]: https://tc39.es/ecma262 "ECMAScript Language Specification"
+[tc39/test262]: https://github.com/tc39/test262
 [well-known symbol]: https://tc39.es/ecma262/#sec-well-known-symbols "ECMAScript Well-Known Symbols"
