@@ -272,12 +272,27 @@ const proxy = new Proxy({}, {
 
 ## Related Work
 
+<!-- 2025 -->
+- [Follow My Flow: Unveiling Client-Side Prototype Pollution Gadgets from One Million Real-World Websites](https://www.computer.org/csdl/proceedings-article/sp/2025/223600a016/21B7Q7OZKms)
+
+  Toolchain the find prototype pollution gadgets in websites. It cannot find the
+  gadgets described in this repository because it cannot instrument the relevant
+  code.
+
+<!-- 2024 -->
+- [Undefined-oriented Programming: Detecting and Chaining Prototype Pollution Gadgets in Node. js Template Engines for Malicious Consequences](https://www.computer.org/csdl/proceedings-article/sp/2024/313000a121/1Ub23uAzNcI)
+
+  Toolchain to find prototype pollution in the Node.js template engines. It
+  cannot find the gadgets described in this repository because it cannot
+  statically analyze built-in functionality.
+
 - [GHunter: Universal Prototype Pollution Gadgets in JavaScript Runtimes](https://www.usenix.org/conference/usenixsecurity24/presentation/cornelissen)
 
   Toolchain to find prototype pollution gadgets in the Node.js runtime. It
   cannot find the gadgets described in this repository because they're not
   covered by the binding code.
 
+<!-- 2023 -->
 - [Silent Spring: Prototype Pollution Leads to Remote Code Execution in Node.js](https://www.usenix.org/conference/usenixsecurity23/presentation/shcherbakov)
 
   Toolchain to find prototype pollution and gadgets in libraries and the Node.js
