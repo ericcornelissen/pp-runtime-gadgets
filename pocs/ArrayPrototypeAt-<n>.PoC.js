@@ -10,6 +10,9 @@ export const about = {
 	description: `
 When Array.prototype.at is used, holes in the array are not explicitly handled
 and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.at",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/at/returns-undefined-for-holes-in-sparse-arrays.js",
 		"test/built-ins/Array/prototype/at/returns-item-relative-index.js",

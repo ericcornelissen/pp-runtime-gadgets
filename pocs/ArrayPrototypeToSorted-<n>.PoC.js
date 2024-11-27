@@ -9,6 +9,10 @@ export const about = {
 	description: `
 When Array.prototype.toSorted is used, holes in the array are not explicitly
 handled and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-sortindexedproperties",
+		"https://tc39.es/ecma262/#sec-array.prototype.tosorted",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/toSorted/holes-not-preserved.js",
 		"test/built-ins/Array/prototype/toSorted/length-decreased-while-iterating.js",

@@ -10,6 +10,9 @@ export const about = {
 	description: `
 When Array.prototype.with is used, holes in the array are not explicitly
 preserved and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.with",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/with/length-decreased-while-iterating.js",
 		"test/built-ins/Array/prototype/with/holes-not-preserved.js",

@@ -10,6 +10,9 @@ export const about = {
 	description: `
 When Array.prototype.copyWithin is used, holes in the array are not explicitly
 handled and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.copywithin",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/copyWithin/coerced-values-start-change-target.js",
 		"test/built-ins/Array/prototype/copyWithin/coerced-values-start-change-start.js",

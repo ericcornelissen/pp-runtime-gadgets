@@ -10,6 +10,9 @@ export const about = {
 	description: `
 When Array.prototype.toSpliced is used, holes in the array are not explicitly
 handled and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.tospliced",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/toSpliced/length-decreased-while-iterating.js",
 		"test/built-ins/Array/prototype/toSpliced/holes-not-preserved.js",

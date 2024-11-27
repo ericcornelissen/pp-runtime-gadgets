@@ -7,9 +7,20 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec] ([fixed reference]), currently at `Get(` 51/160.
+- Continue in the [spec] ([fixed reference]), currently at `Get(` 120/160.
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
 - Replicate `Reflect.ownKeys`' gadget with other uses of `[[OwnPropertyKeys]]`.
+- Similar gadgets to those for `RegExp.prototype[@@match]` and
+  `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
+- Remaining gadgets in `Array.prototype` (fairly certain they're affected based
+  on the existing gadgets, but a PoC still needs to be created).
+  - <https://tc39.es/ecma262/#sec-array.prototype.indexof>
+  - <https://tc39.es/ecma262/#sec-array.prototype.lastindexof>
+  - <https://tc39.es/ecma262/#sec-array.prototype.map>
+  - <https://tc39.es/ecma262/#sec-array.prototype.reverse>
+  - <https://tc39.es/ecma262/#sec-array.prototype.slice>
+  - <https://tc39.es/ecma262/#sec-array.prototype.tolocalestring>
+  - <https://tc39.es/ecma262/#sec-array.prototype.unshift>
 
 ## Reproduce
 
@@ -45,7 +56,7 @@ language design.
   object that is implemented incorrectly.
 
 All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
-v129, and Firefox (Desktop) v131.
+v131, and Firefox (Desktop) v133.
 
 | API                                 | Prop(s)                               | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
 | ----------------------------------- | ------------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
@@ -55,6 +66,8 @@ v129, and Firefox (Desktop) v131.
 | `new ArrayBuffer`                   | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.from`                        | [`<n>`][o0044]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.at`                | [`<n>`][o0046]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.concat`            | [`<n>`][o0087]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`@@isConcatSpreadable`][o0088]       | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.copyWithin`        | [`<n>`][o0077]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.every`             | [`<n>`][o0073]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.fill`              | [`<n>`][o0054]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
@@ -63,6 +76,10 @@ v129, and Firefox (Desktop) v131.
 | `Array.prototype.findIndex`         | [`<n>`][o0048]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.findLast`          | [`<n>`][o0050]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.findLastIndex`     | [`<n>`][o0055]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.flat`              | [`<n>`][o0089]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.flatMap`           | [`<n>`][o0091]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0092]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.forEach`           | [`<n>`][o0090]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.includes`          | [`<n>`][o0058]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.join`              | [`<n>`][o0052]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.pop`               | [`<n>`][o0049]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
@@ -75,6 +92,7 @@ v129, and Firefox (Desktop) v131.
 | `Array.prototype.toReversed`        | [`<n>`][o0047]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.toString`          | [`join`][o0093]                       | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.with`              | [`<n>`][o0045]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `new Error`                         | [`'cause'`][o0079]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Function.prototype.apply`          | [`<n>`][o0005]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
@@ -115,7 +133,12 @@ v129, and Firefox (Desktop) v131.
 |                                     | [`'writable'`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Reflect.ownKeys`                   | [`<n>`][o0001]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `new RegExp`                        | [`'source'`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `RegExp.prototype[@@match]`         | [`'exec'`][o0066]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `RegExp.prototype[@@match]`         | [`0`][o0084]                          | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'exec'`][o0066]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'flags'`][o0082]                    | `1`   | `3`  | No      | No             | No            | Yes           |
+|                                     | [`'global'`][o0083]                   | `1`   | `3`  | Yes     | Yes            | Yes           | No            |
+| `RegExp.prototype[@@matchAll]`      | [`'flags'`][o0086]                    | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'lastIndex'`][o0085]                | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `new SharedArrayBuffer`             | [`'maxByteLength'`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
 | `Set.prototype.difference`          | [`'has','size'`][o0063]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.intersection`        | [`'has','size'`][o0061]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
@@ -220,32 +243,50 @@ where:
 [o0079]: ./pocs/Error-cause.PoC.js
 [o0080]: ./pocs/AggregateError-cause.PoC.js
 [o0081]: ./pocs/StringRaw-raw.PoC.js
+[o0082]: ./pocs/RegExpPrototype@@match-flags.PoC.js
+[o0083]: ./pocs/RegExpPrototype@@match-global.PoC.js
+[o0084]: ./pocs/RegExpPrototype@@match-0.PoC.js
+[o0085]: ./pocs/RegExpPrototype@@matchAll-lastIndex.PoC.js
+[o0086]: ./pocs/RegExpPrototype@@matchAll-flags.PoC.js
+[o0087]: ./pocs/ArrayPrototypeConcat-<n>.PoC.js
+[o0088]: ./pocs/ArrayPrototypeConcat-@@isConcatSpreadable.PoC.js
+[o0089]: ./pocs/ArrayPrototypeFlat-<n>.PoC.js
+[o0090]: ./pocs/ArrayPrototypeForEach-<n>.PoC.js
+[o0091]: ./pocs/ArrayPrototypeFlatMap-<n>.PoC-1.js
+[o0092]: ./pocs/ArrayPrototypeFlatMap-<n>.PoC-2.js
+[o0093]: ./pocs/ArrayPrototypeToString-join.PoC.js
 
 ## Unaffected
 
 The table below lists evaluated sections in the ECMAScript spec which were
 deemed unaffected by prototype pollution.
 
-| API                                    | Property        | Reason                                                                                                              |
-| -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [`[[DefineOwnProperty]]`][i0008]       | `<k>`           | _Not evaluated_                                                                                                     |
-| [`[[Get]]`][i0009]                     | `<k>`           | _Not evaluated_                                                                                                     |
-| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                     |
-| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.           |
-|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property. |
-| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                     |
-|                                        | `<n>`           | _Not evaluated_                                                                                                     |
-| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                             |
-| [`Error.prototype.toString`][i0014]    | `'name'`        | `this` will realistically only be an instance of Error, in which case `name` is defined on `Error.prototype`.       |
-|                                        | `'message'`     | `this` will realistically only be an instance of Error, in which case `message` is defined on `Error.prototype`.    |
-| [`Function.prototype.bind`][i0013]     | `'length'`      | It is checked that the property is an own property before it is accessed.                                           |
-| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                  |
-| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`GetSubstitution`][i0015]             | `<k>`           | Getting properties on the `namedCapture` object which always has a `null` prototype.                                |
-| [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
-| [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                             |
-| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.           |
-| [`RegExp.prototype.toString`][i0012]   | `'source'`      | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                  |
+| API                                    | Property        | Reason                                                                                                                   |
+| -------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [`[[DefineOwnProperty]]`][i0008]       | `<k>`           | _Not evaluated_                                                                                                          |
+| [`[[Get]]`][i0009]                     | `<k>`           | _Not evaluated_                                                                                                          |
+| [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                          |
+| [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.                |
+|                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property.      |
+| [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                          |
+|                                        | `<n>`           | _Not evaluated_                                                                                                          |
+| [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                                  |
+| [`CreateRegExpStringIterator`][i0018]  | `0`             | Only ever invoked on a properly constructed RegExp, meaning `0` is always defined.                                       |
+|                                        | `'lastIndex'`   | This property is explicitly set in all functions calling this abstract operation.                                        |
+| [`Error.prototype.toString`][i0014]    | `'name'`        | `this` will realistically only be an instance of Error, in which case `name` is defined on `Error.prototype`.            |
+|                                        | `'message'`     | `this` will realistically only be an instance of Error, in which case `message` is defined on `Error.prototype`.         |
+| [`Function.prototype.bind`][i0013]     | `'length'`      | It is checked that the property is an own property before it is accessed.                                                |
+| [`GetBindingValue`][i0004]             | `<n>`           | Checks `HasProperty` before `Get`.                                                                                       |
+| [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.                |
+| [`GetSubstitution`][i0015]             | `<k>`           | Getting properties on the `namedCapture` object which always has a `null` prototype.                                     |
+| [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
+| [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
+| [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.                |
+| [`RegExpBuiltinExec`][i0017]           | `'lastIndex'`   | `R` is only ever an initialized RegExp.                                                                                  |
+| [`RegExp.prototype.toString`][i0012]   | `'source'`      | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                       |
+|                                        | `'flags'`       | `this` will realistically only be an instance of RegExp, in which case `flags` is always defined.                        |
+| [`RegExp.prototype[@@match]`][i0016]   | `'unicode'`     | Only affects `lastIndex` incrementing, effect depends on user implementation (Note: may be accessed instead of "flags"). |
+|                                        | `'unicodeSets'` | Only affects `lastIndex` incrementing, effect depends on user implementation (Note: may be accessed instead of "flags"). |
 
 [i0001]: https://tc39.es/ecma262/#sec-copydataproperties
 [i0002]: https://tc39.es/ecma262/#sec-ordinaryhasinstance
@@ -261,7 +302,11 @@ deemed unaffected by prototype pollution.
 [i0012]: https://tc39.es/ecma262/#sec-regexp.prototype.tostring
 [i0013]: https://tc39.es/ecma262/#sec-function.prototype.bind
 [i0014]: https://tc39.es/ecma262/#sec-error.prototype.tostring
-[i0015]:https://tc39.es/ecma262/#sec-getsubstitution
+[i0015]: https://tc39.es/ecma262/#sec-getsubstitution
+[i0016]: https://tc39.es/ecma262/#sec-regexp.prototype-%symbol.match%
+[i0017]: https://tc39.es/ecma262/#sec-regexpbuiltinexec
+[i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
+[i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
 
 ## Methodology
 

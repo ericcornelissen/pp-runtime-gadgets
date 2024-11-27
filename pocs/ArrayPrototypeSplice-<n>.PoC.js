@@ -9,6 +9,9 @@ export const about = {
 	description: `
 When Array.prototype.splice is used, holes in the array are not explicitly
 handled and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.splice",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/splice/create-species-length-exceeding-integer-limit.js",
 	]),

@@ -12,6 +12,9 @@ export const about = {
 When Array.prototype.pop is used on an array-like object it does not check if
 the element at the last index is an own property and potentially read from the
 prototype.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-array.prototype.pop",
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/pop/S15.4.4.6_A2_T2.js",
 		"test/built-ins/Array/prototype/pop/S15.4.4.6_A2_T3.js",

@@ -7,7 +7,13 @@ export const about = {
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/Symbol.match",
 	properties: ["'exec'"],
 	description: `
-`,
+The @@match implementation will internally try to 'exec'ute the RegExp to get
+the return value. For a faulty RegExp implementation to exec property could be
+polluted.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-regexp.prototype-%symbol.match%",
+		"https://tc39.es/ecma262/#sec-regexpexec",
+	],
 	test262: new Set([
 		"test/built-ins/RegExp/prototype/Symbol.match/this-val-non-regexp.js",
 	]),

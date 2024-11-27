@@ -7,6 +7,10 @@ export const about = {
 	description: `
 When Array.prototype.sort is used, holes in the array are not explicitly handled
 and instead it will use polluted values for holes.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-sortindexedproperties",
+		"https://tc39.es/ecma262/#sec-array.prototype.sort",
+	],
 	test262: new Set([
 		"test/built-ins/TypedArray/prototype/sort/stability.js",
 		"test/built-ins/Array/prototype/sort/precise-getter-pops-elements.js",
