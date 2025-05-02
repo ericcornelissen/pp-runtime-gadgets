@@ -9,6 +9,8 @@ export const about = {
 	description: `
 When Array.prototype.fill is used, holes in the array are not explicitly handled
 and instead it will use polluted values for holes.`,
+	spectrace: [
+	],
 	test262: new Set([
 		"test/built-ins/Array/prototype/fill/fill-values-custom-start-and-end.js",
 	]),

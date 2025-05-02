@@ -10,7 +10,7 @@ export const about = {
 	properties: ["<n>"],
 	description: `
 When Array.prototype.shift is used on an array-like object it does not check if
-the element at the last index is an own property and potentially read from the
+the element at the first index is an own property and potentially reads from the
 prototype.`,
 	spectrace: [
 		"https://tc39.es/ecma262/#sec-array.prototype.shift",

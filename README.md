@@ -7,20 +7,11 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec] ([fixed reference]), currently at `Get(` 120/160.
+- Continue in the [spec], currently at `Get(` 121/160 (in [fixed reference]).
 - Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
 - Replicate `Reflect.ownKeys`' gadget with other uses of `[[OwnPropertyKeys]]`.
 - Similar gadgets to those for `RegExp.prototype[@@match]` and
   `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
-- Remaining gadgets in `Array.prototype` (fairly certain they're affected based
-  on the existing gadgets, but a PoC still needs to be created).
-  - <https://tc39.es/ecma262/#sec-array.prototype.indexof>
-  - <https://tc39.es/ecma262/#sec-array.prototype.lastindexof>
-  - <https://tc39.es/ecma262/#sec-array.prototype.map>
-  - <https://tc39.es/ecma262/#sec-array.prototype.reverse>
-  - <https://tc39.es/ecma262/#sec-array.prototype.slice>
-  - <https://tc39.es/ecma262/#sec-array.prototype.tolocalestring>
-  - <https://tc39.es/ecma262/#sec-array.prototype.unshift>
 
 ## Reproduce
 
@@ -81,17 +72,28 @@ v131, and Firefox (Desktop) v133.
 |                                     | [`<n>`][o0092]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.forEach`           | [`<n>`][o0090]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.includes`          | [`<n>`][o0058]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.indexOf`           | [`<n>`][o0094]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.join`              | [`<n>`][o0052]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.lastIndexOf`       | [`<n>`][o0095]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.map`               | [`<n>`][o0096]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.pop`               | [`<n>`][o0049]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.reduce`            | [`<n>`][o0070]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0097]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.reduceRight`       | [`<n>`][o0074]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.shift`             | [`<n>`][o0056]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.reverse`           | [`<n>`][o0098]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.shift`             | [`<n>`][o0099]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0056]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.slice`             | [`<n>`][o0100]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.some`              | [`<n>`][o0071]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.sort`              | [`<n>`][o0057]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.splice`            | [`<n>`][o0076]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0101]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0103]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.toLocaleString`    | [`<n>`][o0102]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toReversed`        | [`<n>`][o0047]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`<n>`][o0104]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toString`          | [`join`][o0093]                       | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.with`              | [`<n>`][o0045]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `new Error`                         | [`'cause'`][o0079]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
@@ -214,10 +216,10 @@ where:
 [o0050]: ./pocs/ArrayPrototypeFindLast-<n>.PoC.js
 [o0051]: ./pocs/ArrayPrototypeFind-<n>.PoC.js
 [o0052]: ./pocs/ArrayPrototypeJoin-<n>.PoC.js
-[o0053]: ./pocs/ArrayPrototypeToSpliced-<n>.PoC.js
+[o0053]: ./pocs/ArrayPrototypeToSpliced-<n>.PoC-1.js
 [o0054]: ./pocs/ArrayPrototypeFill-<n>.PoC.js
 [o0055]: ./pocs/ArrayPrototypeFindLastIndex-<n>.PoC.js
-[o0056]: ./pocs/ArrayPrototypeShift-<n>.PoC.js
+[o0056]: ./pocs/ArrayPrototypeShift-<n>.PoC-1.js
 [o0057]: ./pocs/ArrayPrototypeSort-<n>.PoC.js
 [o0058]: ./pocs/ArrayPrototypeIncludes-<n>.PoC.js
 [o0059]: ./pocs/ArrayPrototypeToSorted-<n>.PoC.js
@@ -231,13 +233,13 @@ where:
 [o0067]: ./pocs/Proxy-defineProperty.PoC.js
 [o0068]: ./pocs/TypedArrayFrom-<n>.PoC.js
 [o0069]: ./pocs/Proxy-preventExtensions.PoC.js
-[o0070]: ./pocs/ArrayPrototypeReduce-<n>.PoC.js
+[o0070]: ./pocs/ArrayPrototypeReduce-<n>.PoC-1.js
 [o0071]: ./pocs/ArrayPrototypeSome-<n>.PoC.js
 [o0072]: ./pocs/ArrayPrototypeFilter-<n>.PoC.js
 [o0073]: ./pocs/ArrayPrototypeEvery-<n>.PoC.js
 [o0074]: ./pocs/ArrayPrototypeReduceRight-<n>.PoC.js
 [o0075]: ./pocs/Proxy-setPrototypeOf.PoC.js
-[o0076]: ./pocs/ArrayPrototypeSplice-<n>.PoC.js
+[o0076]: ./pocs/ArrayPrototypeSplice-<n>.PoC-1.js
 [o0077]: ./pocs/ArrayPrototypeCopyWithin-<n>.PoC.js
 [o0078]: ./pocs/FunctionPrototypeBind-name.PoC.js
 [o0079]: ./pocs/Error-cause.PoC.js
@@ -255,6 +257,17 @@ where:
 [o0091]: ./pocs/ArrayPrototypeFlatMap-<n>.PoC-1.js
 [o0092]: ./pocs/ArrayPrototypeFlatMap-<n>.PoC-2.js
 [o0093]: ./pocs/ArrayPrototypeToString-join.PoC.js
+[o0094]: ./pocs/ArrayPrototypeIndexOf-<n>.PoC.js
+[o0095]: ./pocs/ArrayPrototypeLastIndexOf-<n>.PoC.js
+[o0096]: ./pocs/ArrayPrototypeMap-<n>.PoC.js
+[o0097]: ./pocs/ArrayPrototypeReduce-<n>.PoC-2.js
+[o0098]: ./pocs/ArrayPrototypeReverse-<n>.PoC.js
+[o0099]: ./pocs/ArrayPrototypeShift-<n>.PoC-2.js
+[o0100]: ./pocs/ArrayPrototypeSlice-<n>.PoC.js
+[o0101]: ./pocs/ArrayPrototypeSplice-<n>.PoC-2.js
+[o0102]: ./pocs/ArrayPrototypeToLocaleString-<n>.PoC.js
+[o0103]: ./pocs/ArrayPrototypeSplice-<n>.PoC-3.js
+[o0104]: ./pocs/ArrayPrototypeToSpliced-<n>.PoC-2.js
 
 ## Unaffected
 
@@ -268,6 +281,7 @@ deemed unaffected by prototype pollution.
 | [`[[GetOwnProperty]]`][i0007]          | `<k>`           | _Not evaluated_                                                                                                          |
 | [`ArraySpeciesCreate`][i0006]          | `'constructor'` | Object on which lookup should happen must be an array, which means it must have a `constructor` property.                |
 |                                        | `@@species`     | Object on which lookup should happen must be an array constructor, which means it must have a `@@species` property.      |
+| [`Array.prototype.reduceRight`][i0019] | `<n>`           | Cannot affect initial value because the last index necessarily coincides with the array length.                          |
 | [`HasBinding`][i0003]                  | `@@unscopable`  | _Not evaluated_                                                                                                          |
 |                                        | `<n>`           | _Not evaluated_                                                                                                          |
 | [`CopyDataProperties`][i0001]          | `<k>`           | Implementation should `ToObject` the subject, hence all own keys are actually own keys.                                  |
@@ -306,7 +320,7 @@ deemed unaffected by prototype pollution.
 [i0016]: https://tc39.es/ecma262/#sec-regexp.prototype-%symbol.match%
 [i0017]: https://tc39.es/ecma262/#sec-regexpbuiltinexec
 [i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
-[i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
+[i0019]: https://tc39.es/ecma262/#sec-array.prototype.reduceright
 
 ## Methodology
 

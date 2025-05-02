@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
-const original = [1, /* hole */, 3];
-const value = 2;
+const original = [1, /* hole */, 4];
+const value = 3;
 
 export const about = {
 	function: "Array.prototype.toSpliced",
@@ -9,22 +9,27 @@ export const about = {
 	properties: ["<n>"],
 	description: `
 When Array.prototype.toSpliced is used, holes in the array are not explicitly
-handled and instead it will use polluted values for holes.`,
+handled and instead it will use polluted values for holes when shifting values
+after the inserted index.`,
 	spectrace: [
 		"https://tc39.es/ecma262/#sec-array.prototype.tospliced",
 	],
 	test262: new Set([
-		"test/built-ins/Array/prototype/toSpliced/length-decreased-while-iterating.js",
-		"test/built-ins/Array/prototype/toSpliced/holes-not-preserved.js",
 	]),
 };
 
 export function prerequisite() {
-	const got = original.toSpliced(0, 0);
+	const got = original.toSpliced(1, 0, 2);
 	if (
-		got.length === 3
+		got.length === 4
 		&&
-		got[0] === 1 && got[1] === undefined && got[2] === 3
+		got[0] === 1
+		&&
+		got[1] === 2
+		&&
+		got[2] === undefined
+		&&
+		got[3] === 4
 	) {
 		return [true, null];
 	} else {
@@ -35,11 +40,17 @@ export function prerequisite() {
 export function test() {
 	Object.prototype[1] = value;
 
-	const got = original.toSpliced(0, 0);
+	const got = original.toSpliced(1, 0, 2);
 	if (
-		got.length === 3
+		got.length === 4
 		&&
-		got[0] === 1 && got[1] === 2 && got[2] === 3
+		got[0] === 1
+		&&
+		got[1] === 2
+		&&
+		got[2] === 3
+		&&
+		got[3] === 4
 	) {
 		return true;
 	} else {

@@ -21,18 +21,30 @@ import * as ArrayPrototypeFlatMapN1 from "./ArrayPrototypeFlatMap-<n>.PoC-1.js";
 import * as ArrayPrototypeFlatMapN2 from "./ArrayPrototypeFlatMap-<n>.PoC-2.js";
 import * as ArrayPrototypeForEachN from "./ArrayPrototypeForEach-<n>.PoC.js";
 import * as ArrayPrototypeIncludesN from "./ArrayPrototypeIncludes-<n>.PoC.js";
+import * as ArrayPrototypeIndexOfN from "./ArrayPrototypeIndexOf-<n>.PoC.js";
 import * as ArrayPrototypeJoinN from "./ArrayPrototypeJoin-<n>.PoC.js";
+import * as ArrayPrototypeLastIndexOfN from "./ArrayPrototypeLastIndexOf-<n>.PoC.js";
+import * as ArrayPrototypeMapN from "./ArrayPrototypeMap-<n>.PoC.js";
 import * as ArrayPrototypePopN from "./ArrayPrototypePop-<n>.PoC.js";
-import * as ArrayPrototypeReduceN from "./ArrayPrototypeReduce-<n>.PoC.js";
+import * as ArrayPrototypeReduceN1 from "./ArrayPrototypeReduce-<n>.PoC-1.js";
+import * as ArrayPrototypeReduceN2 from "./ArrayPrototypeReduce-<n>.PoC-2.js";
 import * as ArrayPrototypeReduceRightN from "./ArrayPrototypeReduceRight-<n>.PoC.js";
-import * as ArrayPrototypeShiftN from "./ArrayPrototypeShift-<n>.PoC.js";
+import * as ArrayPrototypeReverseN from "./ArrayPrototypeReverse-<n>.PoC.js";
+import * as ArrayPrototypeShiftN1 from "./ArrayPrototypeShift-<n>.PoC-1.js";
+import * as ArrayPrototypeShiftN2 from "./ArrayPrototypeShift-<n>.PoC-2.js";
+import * as ArrayPrototypeSliceN from "./ArrayPrototypeSlice-<n>.PoC.js";
 import * as ArrayPrototypeSomeN from "./ArrayPrototypeSome-<n>.PoC.js";
 import * as ArrayPrototypeSortN from "./ArrayPrototypeSort-<n>.PoC.js";
-import * as ArrayPrototypeSpliceN from "./ArrayPrototypeSplice-<n>.PoC.js";
+import * as ArrayPrototypeSpliceN1 from "./ArrayPrototypeSplice-<n>.PoC-1.js";
+import * as ArrayPrototypeSpliceN2 from "./ArrayPrototypeSplice-<n>.PoC-2.js";
+import * as ArrayPrototypeSpliceN3 from "./ArrayPrototypeSplice-<n>.PoC-3.js";
+import * as ArrayPrototypeToLocaleStringN from "./ArrayPrototypeToLocaleString-<n>.PoC.js";
 import * as ArrayPrototypeToReversedN from "./ArrayPrototypeToReversed-<n>.PoC.js";
 import * as ArrayPrototypeToSortedN from "./ArrayPrototypeToSorted-<n>.PoC.js";
-import * as ArrayPrototypeToSplicedN from "./ArrayPrototypeToSpliced-<n>.PoC.js";
+import * as ArrayPrototypeToSplicedN1 from "./ArrayPrototypeToSpliced-<n>.PoC-1.js";
+import * as ArrayPrototypeToSplicedN2 from "./ArrayPrototypeToSpliced-<n>.PoC-2.js";
 import * as ArrayPrototypeToStringJoin from "./ArrayPrototypeToString-join.PoC.js";
+import * as ArrayPrototypeUnshiftN from "./ArrayPrototypeUnshift-<n>.PoC.js";
 import * as ArrayPrototypeWithN from "./ArrayPrototypeWith-<n>.PoC.js";
 import * as ErrorCause from "./Error-cause.PoC.js";
 import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
@@ -115,18 +127,30 @@ export const tests = [
 	ArrayPrototypeFlatMapN2,
 	ArrayPrototypeForEachN,
 	ArrayPrototypeIncludesN,
+	ArrayPrototypeIndexOfN,
 	ArrayPrototypeJoinN,
+	ArrayPrototypeLastIndexOfN,
+	ArrayPrototypeMapN,
 	ArrayPrototypePopN,
-	ArrayPrototypeReduceN,
+	ArrayPrototypeReduceN1,
+	ArrayPrototypeReduceN2,
 	ArrayPrototypeReduceRightN,
-	ArrayPrototypeShiftN,
+	ArrayPrototypeReverseN,
+	ArrayPrototypeShiftN1,
+	ArrayPrototypeShiftN2,
+	ArrayPrototypeSliceN,
 	ArrayPrototypeSomeN,
 	ArrayPrototypeSortN,
-	ArrayPrototypeSpliceN,
+	ArrayPrototypeSpliceN1,
+	ArrayPrototypeSpliceN2,
+	ArrayPrototypeSpliceN3,
+	ArrayPrototypeToLocaleStringN,
 	ArrayPrototypeToReversedN,
 	ArrayPrototypeToSortedN,
-	ArrayPrototypeToSplicedN,
+	ArrayPrototypeToSplicedN1,
+	ArrayPrototypeToSplicedN2,
 	ArrayPrototypeToStringJoin,
+	ArrayPrototypeUnshiftN,
 	ArrayPrototypeWithN,
 	ErrorCause,
 	FunctionPrototypeApplyN,
