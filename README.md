@@ -7,11 +7,15 @@ can be affected by prototype pollution.
 
 ## TODO
 
-- Continue in the [spec], currently at `Get(` 121/160 (in [fixed reference]).
-- Replicate gadgets from `Object.defineProperty` with `Object.defineProperties`.
-- Replicate `Reflect.ownKeys`' gadget with other uses of `[[OwnPropertyKeys]]`.
-- Similar gadgets to those for `RegExp.prototype[@@match]` and
-  `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
+- [x] Manually check all 160 `Get(` in the [fixed spec reference].
+- [ ] Double check all 160 `Get(` in the [fixed spec reference].
+- [ ] Manually check other `Get(`-like functions in the [fixed spec reference].
+- [ ] Replicate gadgets from `Object.defineProperty` with
+      `Object.defineProperties`.
+- [ ] Replicate `Reflect.ownKeys`' gadget with other uses of
+      `[[OwnPropertyKeys]]`.
+- [ ] Similar gadgets to those for `RegExp.prototype[@@match]` and
+      `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
 
 ## Reproduce
 
@@ -47,7 +51,13 @@ language design.
   object that is implemented incorrectly.
 
 All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
-v131, and Firefox (Desktop) v133.
+v136, and Firefox (Desktop) v138.
+
+Notes:
+
+- `Array.prototype[*]` gadgets generally should also work on their TypedArray
+  equivalent.
+- `Iterator[*]` gadgets generally should also work on their async equivalent.
 
 | API                                 | Prop(s)                               | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
 | ----------------------------------- | ------------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
@@ -103,7 +113,9 @@ v131, and Firefox (Desktop) v133.
 |                                     | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'return'`][o0064]                   | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'value'`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `JSON.stringify`                    | [`<n>`][o0108]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `JSON.stringify`                    | [`'toJSON'`][o0025]                   | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `new Map`                           | [`0,1`][o0105]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.defineProperty`             | [`'configurable'`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'enumerable'`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'get'`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
@@ -137,14 +149,16 @@ v131, and Firefox (Desktop) v133.
 | `new RegExp`                        | [`'source'`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `RegExp.prototype[@@match]`         | [`0`][o0084]                          | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'exec'`][o0066]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'flags'`][o0082]                    | `1`   | `3`  | No      | No             | No            | Yes           |
-|                                     | [`'global'`][o0083]                   | `1`   | `3`  | Yes     | Yes            | Yes           | No            |
+|                                     | [`'flags'`][o0082]                    | `1`   | `3`  | No      | No             | Yes           | Yes           |
+|                                     | [`'global'`][o0083]                   | `1`   | `3`  | Yes     | Yes            | No            | No            |
 | `RegExp.prototype[@@matchAll]`      | [`'flags'`][o0086]                    | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'lastIndex'`][o0085]                | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `new SharedArrayBuffer`             | [`'maxByteLength'`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
 | `Set.prototype.difference`          | [`'has','size'`][o0063]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.intersection`        | [`'has','size'`][o0061]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.isDisjointFrom`      | [`'has','size'`][o0062]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Set.prototype.isSubsetOf`          | [`'has','size'`][o0106]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+| `Set.prototype.isSupersetOf`        | [`'has','size'`][o0107]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.symmetricDifference` | [`'has','size'`][o0060]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.union`               | [`'has','size'`][o0035]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.endsWith`         | [`@@match`][o0020]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
@@ -153,7 +167,7 @@ v131, and Firefox (Desktop) v133.
 | `String.prototype.replaceAll`       | [`@@match,@@replace,'flags'`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.prototype.startsWith`       | [`@@match`][o0024]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.raw`                        | [`'raw'`][o0081]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `TypedArray`                        | [`<n>`][o0068]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `TypedArray.from`                   | [`<n>`][o0068]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `with`                              | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
 
 where:
@@ -268,6 +282,10 @@ where:
 [o0102]: ./pocs/ArrayPrototypeToLocaleString-<n>.PoC.js
 [o0103]: ./pocs/ArrayPrototypeSplice-<n>.PoC-3.js
 [o0104]: ./pocs/ArrayPrototypeToSpliced-<n>.PoC-2.js
+[o0105]: ./pocs/Map-0,1.PoC.js
+[o0106]: ./pocs/SetPrototypeIsSubsetof-has,size.PoC.js
+[o0107]: ./pocs/SetPrototypeIsSupersetOf-has,size.PoC.js
+[o0108]: ./pocs/JSONStringify-<n>.PoC.js
 
 ## Unaffected
 
@@ -296,6 +314,7 @@ deemed unaffected by prototype pollution.
 | [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
 | [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
 | [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.                |
+| [`PromiseResolve`][i0020]              | `'constructor'` | It is checked that `x` is a `Promise`.                                                                                   |
 | [`RegExpBuiltinExec`][i0017]           | `'lastIndex'`   | `R` is only ever an initialized RegExp.                                                                                  |
 | [`RegExp.prototype.toString`][i0012]   | `'source'`      | `this` will realistically only be an instance of RegExp, in which case `source` is always defined.                       |
 |                                        | `'flags'`       | `this` will realistically only be an instance of RegExp, in which case `flags` is always defined.                        |
@@ -321,6 +340,7 @@ deemed unaffected by prototype pollution.
 [i0017]: https://tc39.es/ecma262/#sec-regexpbuiltinexec
 [i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
 [i0019]: https://tc39.es/ecma262/#sec-array.prototype.reduceright
+[i0020]: https://tc39.es/ecma262/#sec-array.prototype.reduceright
 
 ## Methodology
 
@@ -389,7 +409,7 @@ detail can be found in its `README.md`.
   runtime. It cannot find the gadgets described in this repository because it
   cannot statically analyze built-in functionality.
 
-[fixed reference]: ./spec-reference.html
+[fixed spec reference]: ./spec-reference.html
 [spec]: https://tc39.es/ecma262 "ECMAScript Language Specification"
 [tc39/test262]: https://github.com/tc39/test262
 [well-known symbol]: https://tc39.es/ecma262/#sec-well-known-symbols "ECMAScript Well-Known Symbols"

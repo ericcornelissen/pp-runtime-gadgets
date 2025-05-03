@@ -53,7 +53,9 @@ import * as IteratorDone from "./Iterator-done.PoC.js";
 import * as IteratorNext from "./Iterator-next.PoC.js";
 import * as IteratorReturn from "./Iterator-return.PoC.js";
 import * as IteratorValue from "./Iterator-value.PoC.js";
+import * as JSONStringifyN from "./JSONStringify-<n>.PoC.js";
 import * as JSONStringifyToJSON from "./JSONStringify-toJSON.PoC.js";
+import * as Map01 from "./Map-0,1.PoC.js";
 import * as ObjectDefinePropertyConfigurable from "./ObjectDefineProperty-configurable.PoC.js";
 import * as ObjectDefinePropertyEnumerable from "./ObjectDefineProperty-enumerable.PoC.js";
 import * as ObjectDefinePropertyGet from "./ObjectDefineProperty-get.PoC.js";
@@ -95,6 +97,8 @@ import * as SharedArrayBufferMaxByteLength from "./SharedArrayBuffer-maxByteLeng
 import * as SetPrototypeDifferenceHasSize from "./SetPrototypeDifference-has,size.PoC.js";
 import * as SetPrototypeIntersectionHasSize from "./SetPrototypeIntersection-has,size.PoC.js";
 import * as SetPrototypeIsDisjointFromHasSize from "./SetPrototypeIsDisjointFrom-has,size.PoC.js";
+import * as SetPrototypeIsSubsetOfHasSize from "./SetPrototypeIsSubsetOf-has,size.PoC.js";
+import * as SetPrototypeIsSupersetOfHasSize from "./SetPrototypeIsSupersetOf-has,size.PoC.js";
 import * as SetPrototypeSymmetricDifferenceHasSize from "./SetPrototypeSymmetricDifference-has,size.PoC.js";
 import * as SetPrototypeUnionHasSize from "./SetPrototypeUnion-has,size.PoC.js";
 import * as StringPrototypeEndsWithSymbolMatch from "./StringPrototypeEndsWith-@@match.PoC.js";
@@ -159,7 +163,9 @@ export const tests = [
 	IteratorNext,
 	IteratorReturn,
 	IteratorValue,
+	JSONStringifyN,
 	JSONStringifyToJSON,
+	Map01,
 	ObjectDefinePropertyConfigurable,
 	ObjectDefinePropertyEnumerable,
 	ObjectDefinePropertyGet,
@@ -201,6 +207,8 @@ export const tests = [
 	SetPrototypeDifferenceHasSize,
 	SetPrototypeIntersectionHasSize,
 	SetPrototypeIsDisjointFromHasSize,
+	SetPrototypeIsSubsetOfHasSize,
+	SetPrototypeIsSupersetOfHasSize,
 	SetPrototypeSymmetricDifferenceHasSize,
 	SetPrototypeUnionHasSize,
 	StringPrototypeEndsWithSymbolMatch,

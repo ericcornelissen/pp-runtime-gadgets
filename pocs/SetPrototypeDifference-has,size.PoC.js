@@ -13,6 +13,10 @@ Set (or rather any object) and it will then check if the provided Set 'has' the
 element of the 'this' Set. By polluting the 'size' to be greater than the array
 length and 'has' to always return false, all objects from the non-set object
 will be added to the first set.`,
+	spectrace: [
+		"https://tc39.es/ecma262/#sec-set.prototype.difference",
+		"https://tc39.es/ecma262/#sec-getsetrecord",
+	],
 	test262: new Set([
 		"test/built-ins/Set/prototype/difference/array-throws.js",
 	]),
