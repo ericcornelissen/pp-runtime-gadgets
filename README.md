@@ -10,8 +10,6 @@ can be affected by prototype pollution.
 - [x] Manually check all 160 `Get(` in the [fixed spec reference].
 - [ ] Double check all 160 `Get(` in the [fixed spec reference].
 - [ ] Manually check other `Get(`-like functions in the [fixed spec reference].
-- [ ] Replicate gadgets from `Object.defineProperty` with
-      `Object.defineProperties`.
 - [ ] Replicate `Reflect.ownKeys`' gadget with other uses of
       `[[OwnPropertyKeys]]`.
 - [ ] Similar gadgets to those for `RegExp.prototype[@@match]` and
@@ -116,6 +114,12 @@ Notes:
 | `JSON.stringify`                    | [`<n>`][o0108]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `JSON.stringify`                    | [`'toJSON'`][o0025]                   | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
 | `new Map`                           | [`0,1`][o0105]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.defineProperties`           | [`'configurable'`][o0109]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'enumerable'`][o0110]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'get'`][o0111]                      | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'set'`][o0112]                      | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'value'`][o0113]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'writable'`][o0114]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.defineProperty`             | [`'configurable'`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'enumerable'`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'get'`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
@@ -286,6 +290,12 @@ where:
 [o0106]: ./pocs/SetPrototypeIsSubsetof-has,size.PoC.js
 [o0107]: ./pocs/SetPrototypeIsSupersetOf-has,size.PoC.js
 [o0108]: ./pocs/JSONStringify-<n>.PoC.js
+[o0109]: ./pocs/ObjectDefineProperties-configurable.PoC.js
+[o0110]: ./pocs/ObjectDefineProperties-enumerable.PoC.js
+[o0111]: ./pocs/ObjectDefineProperties-get.PoC.js
+[o0112]: ./pocs/ObjectDefineProperties-set.PoC.js
+[o0113]: ./pocs/ObjectDefineProperties-value.PoC.js
+[o0114]: ./pocs/ObjectDefineProperties-writable.PoC.js
 
 ## Unaffected
 

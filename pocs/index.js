@@ -56,6 +56,12 @@ import * as IteratorValue from "./Iterator-value.PoC.js";
 import * as JSONStringifyN from "./JSONStringify-<n>.PoC.js";
 import * as JSONStringifyToJSON from "./JSONStringify-toJSON.PoC.js";
 import * as Map01 from "./Map-0,1.PoC.js";
+import * as ObjectDefinePropertiesConfigurable from "./ObjectDefineProperties-configurable.PoC.js";
+import * as ObjectDefinePropertiesEnumerable from "./ObjectDefineProperties-enumerable.PoC.js";
+import * as ObjectDefinePropertiesGet from "./ObjectDefineProperties-get.PoC.js";
+import * as ObjectDefinePropertiesSet from "./ObjectDefineProperties-set.PoC.js";
+import * as ObjectDefinePropertiesValue from "./ObjectDefineProperties-value.PoC.js";
+import * as ObjectDefinePropertiesWritable from "./ObjectDefineProperties-writable.PoC.js";
 import * as ObjectDefinePropertyConfigurable from "./ObjectDefineProperty-configurable.PoC.js";
 import * as ObjectDefinePropertyEnumerable from "./ObjectDefineProperty-enumerable.PoC.js";
 import * as ObjectDefinePropertyGet from "./ObjectDefineProperty-get.PoC.js";
@@ -166,6 +172,12 @@ export const tests = [
 	JSONStringifyN,
 	JSONStringifyToJSON,
 	Map01,
+	ObjectDefinePropertiesConfigurable,
+	ObjectDefinePropertiesEnumerable,
+	ObjectDefinePropertiesGet,
+	ObjectDefinePropertiesSet,
+	ObjectDefinePropertiesValue,
+	ObjectDefinePropertiesWritable,
 	ObjectDefinePropertyConfigurable,
 	ObjectDefinePropertyEnumerable,
 	ObjectDefinePropertyGet,
