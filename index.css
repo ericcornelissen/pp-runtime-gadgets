@@ -1,0 +1,12 @@
+:root {
+	background-color: #fff;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		filter: invert(1);
+	}
+}
+
+.proper-name {
+	font-variant: small-caps;
+}
