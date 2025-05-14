@@ -24,7 +24,7 @@ export function prerequisite() {
 	try {
 		object[propertyName] = 2;
 		return [false, `unexpected non-throw`];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

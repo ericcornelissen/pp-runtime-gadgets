@@ -40,7 +40,7 @@ export function test() {
 	try {
 		new ArrayBuffer(8, {});
 		return false;
-	} catch (_) {
+	} catch {
 		return true;
 	}
 }

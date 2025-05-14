@@ -69,9 +69,12 @@ import * as ObjectDefinePropertySet from "./ObjectDefineProperty-set.PoC.js";
 import * as ObjectDefinePropertyValue from "./ObjectDefineProperty-value.PoC.js";
 import * as ObjectDefinePropertyWritable from "./ObjectDefineProperty-writable.PoC.js";
 import * as ObjectEntriesEnumerable from "./ObjectEntries-enumerable.PoC.js";
+import * as ObjectFreezeK from "./ObjectFreeze-<k>.PoC.js";
 import * as ObjectFromEntries01 from "./ObjectFromEntries-0,1.PoC.js";
+import * as ObjectKeysKEnumerable from "./ObjectKeys-<k>,enumerable.PoC.js";
 import * as ObjectKeysEnumerable from "./ObjectKeys-enumerable.PoC.js";
 import * as ObjectPrototypeToStringSymbolToStringTag from "./ObjectPrototypeToString-@@toStringTag.PoC.js";
+import * as ObjectSealK from "./ObjectSeal-<k>.PoC.js";
 import * as ObjectValuesEnumerable from "./ObjectValues-enumerable.PoC.js";
 import * as ProxyApply from "./Proxy-apply.PoC.js";
 import * as ProxyConstruct from "./Proxy-construct.PoC.js";
@@ -185,9 +188,12 @@ export const tests = [
 	ObjectDefinePropertyValue,
 	ObjectDefinePropertyWritable,
 	ObjectEntriesEnumerable,
+	ObjectFreezeK,
 	ObjectFromEntries01,
+	ObjectKeysKEnumerable,
 	ObjectKeysEnumerable,
 	ObjectPrototypeToStringSymbolToStringTag,
+	ObjectSealK,
 	ObjectValuesEnumerable,
 	ProxyApply,
 	ProxyConstruct,

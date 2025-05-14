@@ -7,7 +7,7 @@ test-node:
 	@echo "== RESULTS =="
 	@node ./runners/node.js
 
-DOCKER_NODE_VERSION=22.7.0
+DOCKER_NODE_VERSION=24.0.1
 test-node-docker:
 	@echo "== RUNTIME =="
 	@docker pull node:$(DOCKER_NODE_VERSION)-alpine
@@ -22,7 +22,7 @@ test-deno:
 	@echo "== RESULTS =="
 	@deno run ./runners/node.js
 
-DOCKER_DENO_VERSION=1.46.1
+DOCKER_DENO_VERSION=2.3.1
 test-deno-docker:
 	@echo "== RUNTIME =="
 	@docker pull denoland/deno:$(DOCKER_DENO_VERSION)

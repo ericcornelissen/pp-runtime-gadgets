@@ -48,7 +48,7 @@ language design.
 - `3`: _Faulty implementation_ - Gadgets that occur because a user uses an
   object that is implemented incorrectly.
 
-All gadgets were tested on Node.js v22.7.0, Deno v1.46.1, Chromium (Desktop)
+All gadgets were tested on Node.js v24.0.1, Deno v1.46.1, Chromium (Desktop)
 v136, and Firefox (Desktop) v138.
 
 Notes:
@@ -128,7 +128,8 @@ Notes:
 |                                     | [`'writable'`][o0012]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.entries`                    | [`'enumerable'`][o0013]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.fromEntries`                | [`0,1`][o0014]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.keys`                       | [`'enumerable'`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+| `Object.keys`                       | [`<k>,'enumerable'`][o0115]           | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
+|                                     | [`'enumerable'`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.prototype.toString`         | [`@@toStringTag`][o0034]              | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `Object.values`                     | [`'enumerable'`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `new Proxy`                         | [`'apply'`][o0040]                    | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
@@ -172,7 +173,7 @@ Notes:
 | `String.prototype.startsWith`       | [`@@match`][o0024]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
 | `String.raw`                        | [`'raw'`][o0081]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
 | `TypedArray.from`                   | [`<n>`][o0068]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `with`                              | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | _Not tested_  | _Not tested_  |
+| `with`                              | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | Yes           | Yes           |
 
 where:
 
@@ -296,6 +297,7 @@ where:
 [o0112]: ./pocs/ObjectDefineProperties-set.PoC.js
 [o0113]: ./pocs/ObjectDefineProperties-value.PoC.js
 [o0114]: ./pocs/ObjectDefineProperties-writable.PoC.js
+[o0115]: ./pocs/ObjectKeys-<k>,enumerable.PoC.js
 
 ## Unaffected
 
@@ -322,6 +324,8 @@ deemed unaffected by prototype pollution.
 | [`GetPrototypeFromConstructor`][i0005] | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.                |
 | [`GetSubstitution`][i0015]             | `<k>`           | Getting properties on the `namedCapture` object which always has a `null` prototype.                                     |
 | [`Object.assign`][i0010]               | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
+| `Object.freeze`                        | [`<k>`][i0022]  | -                                                                                                                        |
+| `Object.seal`                          | [`<k>`][i0021]  | -                                                                                                                        |
 | [`ObjectDefineProperties`][i0011]      | `<k>`           | Will only access keys in the `[[OwnPropertyKeys]]` set.                                                                  |
 | [`OrdinaryHasInstance`][i0002]         | `'prototype'`   | Object on which lookup should happen must be a callable, which means it must have a `prototype` property.                |
 | [`PromiseResolve`][i0020]              | `'constructor'` | It is checked that `x` is a `Promise`.                                                                                   |
@@ -351,6 +355,8 @@ deemed unaffected by prototype pollution.
 [i0018]: https://tc39.es/ecma262/#sec-createregexpstringiterator
 [i0019]: https://tc39.es/ecma262/#sec-array.prototype.reduceright
 [i0020]: https://tc39.es/ecma262/#sec-array.prototype.reduceright
+[i0021]: ./pocs/ObjectSeal-<k>.PoC.js
+[i0022]: ./pocs/ObjectFreeze-<k>.PoC.js
 
 ## Methodology
 

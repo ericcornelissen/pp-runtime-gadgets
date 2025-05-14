@@ -25,7 +25,7 @@ export function prerequisite() {
 		} else {
 			return [false, `got ${got}`];
 		}
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

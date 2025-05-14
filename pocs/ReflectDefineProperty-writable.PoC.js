@@ -30,7 +30,7 @@ export function prerequisite() {
 	try {
 		object[propertyName] = newValue;
 		return [false, "writable by default"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

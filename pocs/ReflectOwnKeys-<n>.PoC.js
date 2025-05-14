@@ -6,7 +6,7 @@ const subject = new Proxy({}, {
 			length: 2,
 			0: "foo",
 		};
-	}
+	},
 });
 
 export const about = {
@@ -31,7 +31,7 @@ export function prerequisite() {
 	try {
 		const got = Reflect.ownKeys(subject);
 		return [false, `got ${got}`];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

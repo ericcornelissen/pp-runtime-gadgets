@@ -25,7 +25,7 @@ export function prerequisite() {
 	try {
 		set1.isSubsetOf(set2);
 		return [false, "Unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

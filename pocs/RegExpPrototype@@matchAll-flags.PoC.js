@@ -19,7 +19,7 @@ export function prerequisite() {
 	try {
 		RegExp.prototype[Symbol.matchAll].call(subject, "foobar");
 		return [false, "unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

@@ -25,7 +25,7 @@ export function prerequisite() {
 	try {
 		set1.isSupersetOf(set2);
 		return [false, "Unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

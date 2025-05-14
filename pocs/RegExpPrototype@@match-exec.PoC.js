@@ -23,7 +23,7 @@ export function prerequisite() {
 	try {
 		RegExp.prototype[Symbol.match].call(subject);
 		return [false, "unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

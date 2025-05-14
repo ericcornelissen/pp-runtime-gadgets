@@ -25,7 +25,7 @@ export function prerequisite() {
 	try {
 		Array.from(subject);
 		return [false, "unexpected non-throw"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

@@ -36,7 +36,7 @@ function test() {
 	try {
 		eval(`with (context) { ${property} }`);
 		return false;
-	} catch (_) {
+	} catch {
 		return true;
 	}
 };

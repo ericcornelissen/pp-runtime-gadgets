@@ -33,7 +33,7 @@ export function test() {
 	try {
 		"foobar".startsWith({});
 		return false;
-	} catch (_) {
+	} catch {
 		return true;
 	}
 }

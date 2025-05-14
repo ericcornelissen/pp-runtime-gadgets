@@ -48,7 +48,7 @@ export function test() {
 		} else {
 			return false;
 		}
-	} catch (_) {
+	} catch {
 		// may cause an error if polluted extensibility does not match the
 		// actual extensibility.
 		return true;

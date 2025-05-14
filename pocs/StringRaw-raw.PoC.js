@@ -15,7 +15,7 @@ export function prerequisite() {
 	try {
 		String.raw({}, "foobar");
 		return [false, "unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }

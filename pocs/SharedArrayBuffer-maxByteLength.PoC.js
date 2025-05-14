@@ -40,7 +40,7 @@ export function test() {
 	try {
 		new SharedArrayBuffer(8, {});
 		return false;
-	} catch (_) {
+	} catch {
 		return true;
 	}
 }

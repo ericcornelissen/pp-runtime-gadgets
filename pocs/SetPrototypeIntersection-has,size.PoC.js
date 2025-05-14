@@ -26,7 +26,7 @@ export function prerequisite() {
 	try {
 		set1.intersection(set2);
 		return [false, "Unexpected success"];
-	} catch (_) {
+	} catch {
 		return [true, null];
 	}
 }
