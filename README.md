@@ -29,151 +29,140 @@ The table below provides an overview of known functions affected by prototype
 pollution in the JavaScript language, or _gadgets_. This list is not exhaustive
 both in terms of affected APIs and usable properties.
 
-We indicate what kind of pollution is required to use the gadgets. This helps
-indicate how easy it is to exploit a given gadget because data only attacks are
-easier in practice.
-
-- `1`: _Data_ - Gadget that work when polluting with data only.
-- `2`: _Function_ - Gadget that require polluting with a function.
-- `3`: _Function/DoS_ - Gadget that require polluting with a function, but
-  polluting with a value will cause an exception.
-
-We try to categorize the gadgets into types. These types are very subjective and
-mostly try to give an indication of how problematic the gadget is in terms of
-language design.
-
-- `1`: _Language_ - Gadgets that occur because of the language design.
-- `2`: _User provided object_ - Gadgets that occur because a user provided
-  object is used.
-- `3`: _Faulty implementation_ - Gadgets that occur because a user uses an
-  object that is implemented incorrectly.
-
 All gadgets were tested on Node.js v24.0.1, Deno v1.46.1, Chromium (Desktop)
 v136, and Firefox (Desktop) v138.
 
-Notes:
+The "Score" is an attempt at capturing how easy it is to exploit the gadget in
+an arbitrary program, lower is easier. The trailing columns in the table specify
+what is required to exploit the gadget.
 
-- `Array.prototype[*]` gadgets generally should also work on their TypedArray
-  equivalent.
-- `Iterator[*]` gadgets generally should also work on their async equivalent.
+| Requirement           | Weight | Description                                                                       |
+| --------------------- | ------ | --------------------------------------------------------------------------------- |
+| Function pollution    | `3`    | The gadget requires polluting with a function.                                    |
+| Faulty implementation | `2`    | The gadget requires a custom implementation that does not follow a specification. |
+| Optional object       | `1`    | The gadget requires an optional object is explicitly provided.                    |
+| Missing expected key  | `1`    | The gadget requires an expected property is missing (e.g. holes in array).        |
+| Incorrect argument    | `1`    | The gadget requires an incorrect argument (e.g. wrong type) is provided.          |
+| Symbol property       | `3`    | The gadget requires polluting a property which is a symbol.                       |
 
-| API                                 | Prop(s)                               | Level | Type | Node.js | Deno           | Chromium      | Firefox       |
-| ----------------------------------- | ------------------------------------- | ----- | ---- | ------- | -------------- | ------------- | ------------- |
-| `[[ToPrimitive]]`                   | [`'toString'`][o0002]                 | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'valueOf'`][o0003]                  | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `new AggregateError`                | [`'cause'`][o0080]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `new ArrayBuffer`                   | [`'maxByteLength'`][o0004]            | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.from`                        | [`<n>`][o0044]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.at`                | [`<n>`][o0046]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.concat`            | [`<n>`][o0087]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`@@isConcatSpreadable`][o0088]       | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.copyWithin`        | [`<n>`][o0077]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.every`             | [`<n>`][o0073]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.fill`              | [`<n>`][o0054]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.filter`            | [`<n>`][o0072]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.find`              | [`<n>`][o0051]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.findIndex`         | [`<n>`][o0048]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.findLast`          | [`<n>`][o0050]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.findLastIndex`     | [`<n>`][o0055]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.flat`              | [`<n>`][o0089]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.flatMap`           | [`<n>`][o0091]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0092]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.forEach`           | [`<n>`][o0090]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.includes`          | [`<n>`][o0058]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.indexOf`           | [`<n>`][o0094]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.join`              | [`<n>`][o0052]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.lastIndexOf`       | [`<n>`][o0095]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.map`               | [`<n>`][o0096]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.pop`               | [`<n>`][o0049]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.reduce`            | [`<n>`][o0070]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0097]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.reduceRight`       | [`<n>`][o0074]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.reverse`           | [`<n>`][o0098]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.shift`             | [`<n>`][o0099]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0056]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.slice`             | [`<n>`][o0100]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.some`              | [`<n>`][o0071]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.sort`              | [`<n>`][o0057]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.splice`            | [`<n>`][o0076]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0101]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0103]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toLocaleString`    | [`<n>`][o0102]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toReversed`        | [`<n>`][o0047]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`<n>`][o0104]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toString`          | [`join`][o0093]                       | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.with`              | [`<n>`][o0045]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `new Error`                         | [`'cause'`][o0079]                    | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Function.prototype.apply`          | [`<n>`][o0005]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Function.prototype.bind`           | [`'name'`][o0078]                     | `1`   | `3`  | No      | No             | No            | No            |
-| `Iterator`                          | [`'done'`][o0032]                     | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'next'`][o0006]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'return'`][o0064]                   | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'value'`][o0033]                    | `3`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `JSON.stringify`                    | [`<n>`][o0108]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `JSON.stringify`                    | [`'toJSON'`][o0025]                   | `2`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `new Map`                           | [`0,1`][o0105]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.defineProperties`           | [`'configurable'`][o0109]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'enumerable'`][o0110]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'get'`][o0111]                      | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'set'`][o0112]                      | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'value'`][o0113]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'writable'`][o0114]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.defineProperty`             | [`'configurable'`][o0007]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'enumerable'`][o0008]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'get'`][o0009]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'set'`][o0010]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'value'`][o0011]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'writable'`][o0012]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.entries`                    | [`'enumerable'`][o0013]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.fromEntries`                | [`0,1`][o0014]                        | `1`   | `1`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.keys`                       | [`<k>,'enumerable'`][o0115]           | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'enumerable'`][o0015]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.prototype.toString`         | [`@@toStringTag`][o0034]              | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Object.values`                     | [`'enumerable'`][o0016]               | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new Proxy`                         | [`'apply'`][o0040]                    | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'construct'`][o0065]                | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'defineProperty'`][o0067]           | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'deleteProperty'`][o0041]           | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'getOwnPropertyDescriptor'`][o0038] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'isExtensible'`][o0042]             | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'ownKeys'`][o0037]                  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'preventExtensions'`][o0069]        | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'set'`][o0036]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'setPrototypeOf'`][o0075]           | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.apply`                     | [`<n>`][o0017]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.construct`                 | [`<n>`][o0018]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.defineProperty`            | [`'configurable'`][o0026]             | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'enumerable'`][o0027]               | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'get'`][o0028]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'set'`][o0029]                      | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'value'`][o0030]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'writable'`][o0031]                 | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Reflect.ownKeys`                   | [`<n>`][o0001]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new RegExp`                        | [`'source'`][o0039]                   | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `RegExp.prototype[@@match]`         | [`0`][o0084]                          | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'exec'`][o0066]                     | `3`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'flags'`][o0082]                    | `1`   | `3`  | No      | No             | Yes           | Yes           |
-|                                     | [`'global'`][o0083]                   | `1`   | `3`  | Yes     | Yes            | No            | No            |
-| `RegExp.prototype[@@matchAll]`      | [`'flags'`][o0086]                    | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-|                                     | [`'lastIndex'`][o0085]                | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `new SharedArrayBuffer`             | [`'maxByteLength'`][o0019]            | `1`   | `2`  | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
-| `Set.prototype.difference`          | [`'has','size'`][o0063]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.intersection`        | [`'has','size'`][o0061]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.isDisjointFrom`      | [`'has','size'`][o0062]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.isSubsetOf`          | [`'has','size'`][o0106]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.isSupersetOf`        | [`'has','size'`][o0107]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.symmetricDifference` | [`'has','size'`][o0060]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `Set.prototype.union`               | [`'has','size'`][o0035]               | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.endsWith`         | [`@@match`][o0020]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.includes`         | [`@@match`][o0021]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.matchAll`         | [`@@match,@@matchAll,'flags'`][o0022] | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.replaceAll`       | [`@@match,@@replace,'flags'`][o0023]  | `3`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.prototype.startsWith`       | [`@@match`][o0024]                    | `1`   | `2`  | Yes     | Yes            | Yes           | Yes           |
-| `String.raw`                        | [`'raw'`][o0081]                      | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `TypedArray.from`                   | [`<n>`][o0068]                        | `1`   | `3`  | Yes     | Yes            | Yes           | Yes           |
-| `with`                              | [`@@unscopables`][o0043]              | `1`   | `1`  | Yes     | _Unsupported_  | Yes           | Yes           |
+| API                                 | Prop(s)                               | Score | Node.js | Deno           | Chromium      | Firefox       | Function pollution | Faulty implementation | Optional object | Missing expected key | Incorrect argument |
+| ----------------------------------- | ------------------------------------- | ----- | ------- | -------------- | ------------- | ------------- | ------------------ | --------------------- | --------------- | -------------------- | ------------------ |
+| `[[ToPrimitive]]`                   | [`'toString'`][o0002]                 | ?     | Yes     | Yes            | Yes           | Yes           | ?                  | ?                     | ?               | ?                    | ?                  |
+|                                     | [`'valueOf'`][o0003]                  | ?     | Yes     | Yes            | Yes           | Yes           | ?                  | ?                     | ?               | ?                    | ?                  |
+| `new AggregateError`                | [`'cause'`][o0080]                    | `0`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `0`                  | `0`                |
+| `new ArrayBuffer`                   | [`'maxByteLength'`][o0004]            | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `1`             | `0`                  | `0`                |
+| `Array.from`                        | [`<n>`][o0044]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `1`                   | `0`             | `0`                  | `0`                |
+| `Array.prototype.at`                | [`<n>`][o0046]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.concat`            | [`<n>`][o0087]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`@@isConcatSpreadable`][o0088]       | `4`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `0`                  | `1`                |
+| `Array.prototype.copyWithin`        | [`<n>`][o0077]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.every`             | [`<n>`][o0073]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.fill`              | [`<n>`][o0054]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.filter`            | [`<n>`][o0072]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.find`              | [`<n>`][o0051]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.findIndex`         | [`<n>`][o0048]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.findLast`          | [`<n>`][o0050]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.findLastIndex`     | [`<n>`][o0055]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.flat`              | [`<n>`][o0089]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.flatMap`           | [`<n>`][o0091]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0092]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.forEach`           | [`<n>`][o0090]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.includes`          | [`<n>`][o0058]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.indexOf`           | [`<n>`][o0094]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.join`              | [`<n>`][o0052]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.lastIndexOf`       | [`<n>`][o0095]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.map`               | [`<n>`][o0096]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.pop`               | [`<n>`][o0049]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.reduce`            | [`<n>`][o0070]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0097]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.reduceRight`       | [`<n>`][o0074]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.reverse`           | [`<n>`][o0098]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.shift`             | [`<n>`][o0099]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0056]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.slice`             | [`<n>`][o0100]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.some`              | [`<n>`][o0071]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.sort`              | [`<n>`][o0057]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.splice`            | [`<n>`][o0076]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0101]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0103]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.toLocaleString`    | [`<n>`][o0102]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.toReversed`        | [`<n>`][o0047]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+|                                     | [`<n>`][o0104]                        | `1`   | Yes     | Yes            | Yes           | Yes           | `0`                | `0`                   | `0`             | `1`                  | `0`                |
+| `Array.prototype.toString`          | [`join`][o0093]                       | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Array.prototype.with`              | [`<n>`][o0045]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `new Error`                         | [`'cause'`][o0079]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Function.prototype.apply`          | [`<n>`][o0005]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Function.prototype.bind`           | [`'name'`][o0078]                     | `?`   | No      | No             | No            | No            | | | | | |
+| `isNaN`                             | [`'toString','valueOf'`][o????]       | `?`   | ?       | ?              | ?             | ?             | `1` | | | | |
+| `Iterator`                          | [`'done'`][o0032]                     | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'next'`][o0006]                     | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'return'`][o0064]                   | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'value'`][o0033]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `JSON.stringify`                    | [`<n>`][o0108]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `JSON.stringify`                    | [`'toJSON'`][o0025]                   | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `new Map`                           | [`0,1`][o0105]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.defineProperties`           | [`'configurable'`][o0109]             | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'enumerable'`][o0110]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'get'`][o0111]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'set'`][o0112]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'value'`][o0113]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'writable'`][o0114]                 | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.defineProperty`             | [`'configurable'`][o0007]             | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'enumerable'`][o0008]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'get'`][o0009]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'set'`][o0010]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'value'`][o0011]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'writable'`][o0012]                 | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.entries`                    | [`'enumerable'`][o0013]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.fromEntries`                | [`0,1`][o0014]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.keys`                       | [`<k>,'enumerable'`][o0115]           | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'enumerable'`][o0015]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.prototype.toString`         | [`@@toStringTag`][o0034]              | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Object.values`                     | [`'enumerable'`][o0016]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `new Proxy`                         | [`'apply'`][o0040]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'construct'`][o0065]                | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'defineProperty'`][o0067]           | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'deleteProperty'`][o0041]           | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'getOwnPropertyDescriptor'`][o0038] | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'isExtensible'`][o0042]             | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'ownKeys'`][o0037]                  | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'preventExtensions'`][o0069]        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'set'`][o0036]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'setPrototypeOf'`][o0075]           | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Reflect.apply`                     | [`<n>`][o0017]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Reflect.construct`                 | [`<n>`][o0018]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Reflect.defineProperty`            | [`'configurable'`][o0026]             | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'enumerable'`][o0027]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'get'`][o0028]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'set'`][o0029]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'value'`][o0030]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'writable'`][o0031]                 | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Reflect.ownKeys`                   | [`<n>`][o0001]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `new RegExp`                        | [`'source'`][o0039]                   | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `RegExp.prototype[@@match]`         | [`0`][o0084]                          | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'exec'`][o0066]                     | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'flags'`][o0082]                    | `?`   | No      | No             | Yes           | Yes           | | | | | |
+|                                     | [`'global'`][o0083]                   | `?`   | Yes     | Yes            | No            | No            | | | | | |
+| `RegExp.prototype[@@matchAll]`      | [`'flags'`][o0086]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+|                                     | [`'lastIndex'`][o0085]                | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `new SharedArrayBuffer`             | [`'maxByteLength'`][o0019]            | `?`   | Yes     | Yes            | _Unsupported_ | _Unsupported_ | | | | | |
+| `Set.prototype.difference`          | [`'has','size'`][o0063]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.intersection`        | [`'has','size'`][o0061]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.isDisjointFrom`      | [`'has','size'`][o0062]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.isSubsetOf`          | [`'has','size'`][o0106]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.isSupersetOf`        | [`'has','size'`][o0107]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.symmetricDifference` | [`'has','size'`][o0060]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `Set.prototype.union`               | [`'has','size'`][o0035]               | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.prototype.endsWith`         | [`@@match`][o0020]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.prototype.includes`         | [`@@match`][o0021]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.prototype.matchAll`         | [`@@match,@@matchAll,'flags'`][o0022] | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.prototype.replaceAll`       | [`@@match,@@replace,'flags'`][o0023]  | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.prototype.startsWith`       | [`@@match`][o0024]                    | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `String.raw`                        | [`'raw'`][o0081]                      | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `TypedArray.from`                   | [`<n>`][o0068]                        | `?`   | Yes     | Yes            | Yes           | Yes           | | | | | |
+| `with`                              | [`@@unscopables`][o0043]              | `?`   | Yes     | _Unsupported_  | Yes           | Yes           | | | | | |
 
 where:
 
@@ -182,6 +171,12 @@ where:
 - `/@@.+?/`: is a specific [well-known symbol].
 - `<n>`: is any numeric property.
 - `<k>`: is any property.
+
+notes:
+
+- `Array.prototype[*]` gadgets generally should also work on their TypedArray
+  equivalent.
+- `Iterator[*]` gadgets generally should also work on their async equivalent.
 
 [o0001]: ./pocs/[[OwnPropertyKeys]]-<n>.PoC.js
 [o0002]: ./pocs/[[ToPrimitive]]-toString.PoC.js
