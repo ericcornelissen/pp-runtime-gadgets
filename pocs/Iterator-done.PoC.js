@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const subject = {
 	[Symbol.iterator]() {
 		let i = 0;
@@ -55,4 +57,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.done;
+}
+
+export function score() {
+	return [
+		scoring.FAULTY_IMPLEMENTATION,
+	];
 }

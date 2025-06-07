@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const length = 8;
 const maxByteLength = 7;
 
@@ -47,4 +49,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.maxByteLength;
+}
+
+export function score() {
+	return [
+		scoring.OPTIONAL_OBJECT,
+	];
 }

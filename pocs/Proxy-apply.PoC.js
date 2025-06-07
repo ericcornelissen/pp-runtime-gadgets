@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const valueOriginal = "foobar";
 const valuePolluted = "foobaz";
 const fn = () => valueOriginal;
@@ -54,4 +56,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.apply;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

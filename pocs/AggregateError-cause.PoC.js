@@ -39,3 +39,9 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.cause;
 }
+
+export function score() {
+	return [
+		// none
+	];
+}

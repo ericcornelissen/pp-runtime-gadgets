@@ -46,3 +46,9 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.configurable;
 }
+
+export function score() {
+	return [
+		// none
+	];
+}

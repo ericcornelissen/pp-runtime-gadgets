@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const arrayLike = {};
 const value = "foobar";
 
@@ -9,7 +11,7 @@ export const about = {
 	properties: ["'join'"],
 	description: `
 The toString specification for Arrays uses its 'join' function to convert arrays
-to a string. For array-like function that don't implement a 'join' but are used
+to a string. For array-like objects that don't implement a 'join' but are used
 as 'this' value will use a polluted join function (despite not failing without
 one).`,
 	spectrace: [
@@ -39,4 +41,11 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.join;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+		scoring.NON_STANDARD_THIS,
+	];
 }

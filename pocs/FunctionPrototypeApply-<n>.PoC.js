@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const thisArg = {};
 
 const args = {
@@ -51,4 +53,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[1];
+}
+
+export function score() {
+	return [
+		scoring.FAULTY_IMPLEMENTATION,
+	];
 }

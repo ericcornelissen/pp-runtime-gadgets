@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
 import { tests } from "../pocs/index.js";
+import { computeScore } from "../pocs/score.js";
 
 /**
  * @typedef TestResult
@@ -26,6 +27,7 @@ function Failure() {
 		outcome: Outcome.FAILURE,
 		reason: null,
 		detail: null,
+		score: null,
 	});
 }
 
@@ -34,14 +36,16 @@ function Invalid(reason, detail) {
 		outcome: Outcome.INVALID,
 		reason,
 		detail,
+		score: null,
 	});
 }
 
-function Success() {
+function Success(scorePoints) {
 	return Object.freeze({
 		outcome: Outcome.SUCCESS,
 		reason: null,
 		detail: null,
+		score: computeScore(scorePoints),
 	});
 }
 
@@ -76,9 +80,10 @@ export function* all() {
 			testCase.cleanup();
 
 			if (passed) {
+				const scorePoints = testCase.score();
 				yield {
 					about: testCase.about,
-					result: Success(),
+					result: Success(scorePoints),
 				};
 			} else {
 				yield {

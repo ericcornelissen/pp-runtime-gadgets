@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const value = "bar";
 
 const subject = new Proxy({
@@ -50,4 +52,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.enumerable;
+}
+
+export function score() {
+	return [
+		scoring.REQUIRES_PROXY,
+	];
 }

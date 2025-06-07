@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 export const about = {
 	function: "Array.prototype.sort",
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort",
@@ -49,4 +51,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[1];
+}
+
+export function score() {
+	return [
+		scoring.MISSING_EXPECTED_KEY,
+	];
 }

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const tag = "foobar";
 const subject = {};
 
@@ -38,4 +40,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[Symbol.toStringTag];
+}
+
+export function score() {
+	return [
+		scoring.SYMBOL_PROPERTY,
+	];
 }

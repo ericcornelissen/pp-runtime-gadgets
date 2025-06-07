@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 // NOTE: This test uses Int16Array as a concrete implementation of TypedArray.
 
 const value = 42;
@@ -42,4 +44,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[0];
+}
+
+export function score() {
+	return [
+		scoring.FAULTY_IMPLEMENTATION,
+	];
 }

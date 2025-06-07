@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const property = "foo";
 const value = "bar";
 const object = { };
@@ -58,4 +60,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.defineProperty;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

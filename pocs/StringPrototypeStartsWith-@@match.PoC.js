@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 export const about = {
 	function: "String.prototype.startsWith",
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith",
@@ -40,4 +42,11 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[Symbol.match];
+}
+
+export function score() {
+	return [
+		scoring.INCORRECT_ARGUMENT_TYPE,
+		scoring.SYMBOL_PROPERTY,
+	];
 }

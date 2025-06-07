@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const valueOfBackup = Object.prototype.valueOf;
 
 const value = 42;
@@ -43,4 +45,10 @@ export function test() {
 
 export function cleanup() {
 	Object.prototype.valueOf = valueOfBackup;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

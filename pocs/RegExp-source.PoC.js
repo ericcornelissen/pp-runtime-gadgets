@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const pattern = { [Symbol.match]: true };
 const source = "foobar";
 
@@ -45,4 +47,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.source;
+}
+
+export function score() {
+	return [
+		scoring.FAULTY_IMPLEMENTATION,
+	];
 }

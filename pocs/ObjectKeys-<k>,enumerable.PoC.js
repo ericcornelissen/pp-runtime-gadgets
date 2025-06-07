@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const subject = new Proxy({}, {
 	getOwnPropertyDescriptor() {
 		return { configurable: true };
@@ -56,4 +58,11 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype[1];
 	delete Object.prototype.enumerable;
+}
+
+export function score() {
+	return [
+		scoring.FAULTY_IMPLEMENTATION,
+		scoring.REQUIRES_PROXY,
+	];
 }

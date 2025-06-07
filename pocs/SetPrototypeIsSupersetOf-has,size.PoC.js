@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const set1 = new Set([1, 2]);
 const set2 = [3];
 
@@ -45,4 +47,10 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.has;
 	delete Object.prototype.size;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

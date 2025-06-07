@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const original = [3, /* hole */, 2];
 
 export const about = {
@@ -49,4 +51,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[1];
+}
+
+export function score() {
+	return [
+		scoring.MISSING_EXPECTED_KEY,
+	];
 }

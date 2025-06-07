@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 export const about = {
 	function: "new Proxy()",
 	link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy",
@@ -65,4 +67,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype.getOwnPropertyDescriptor;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

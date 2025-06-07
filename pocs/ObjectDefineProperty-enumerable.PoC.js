@@ -49,3 +49,9 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.enumerable;
 }
+
+export function score() {
+	return [
+		// none
+	];
+}

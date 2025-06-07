@@ -26,7 +26,7 @@ function prerequisite() {
 	} else {
 		return [false, `got ${got}`];
 	}
-};
+}
 
 function test() {
 	Object.prototype[Symbol.unscopables] = {
@@ -39,11 +39,17 @@ function test() {
 	} catch {
 		return true;
 	}
-};
+}
 
 function cleanup() {
 	delete Object.prototype[Symbol.unscopables];
-};
+}
+
+function score() {
+	return [
+		// scoring.SYMBOL_PROPERTY,
+	];
+}
 
 console.log(
 	prerequisite()

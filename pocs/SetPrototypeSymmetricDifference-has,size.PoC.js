@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const set1 = new Set([1, 2]);
 const set2 = [3];
 
@@ -32,8 +34,8 @@ export function prerequisite() {
 }
 
 export function test() {
-	Object.prototype.size = 100;
 	Object.prototype.has = () => false;
+	Object.prototype.size = 100;
 
 	const set3 = set1.symmetricDifference(set2);
 	if (
@@ -54,4 +56,10 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.size;
 	delete Object.prototype.has;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION
+	];
 }

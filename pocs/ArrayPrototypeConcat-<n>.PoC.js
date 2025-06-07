@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const subject = {
 	[Symbol.isConcatSpreadable]: true,
 	length: 1,
@@ -40,4 +42,10 @@ export function test() {
 
 export function cleanup() {
 	delete Object.prototype[0];
+}
+
+export function score() {
+	return [
+		scoring.MISSING_EXPECTED_KEY,
+	];
 }

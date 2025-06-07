@@ -47,3 +47,9 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.name;
 }
+
+export function score() {
+	return [
+		// none
+	];
+}

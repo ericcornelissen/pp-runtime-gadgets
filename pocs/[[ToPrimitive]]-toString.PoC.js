@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: BlueOak-1.0.0
 
+import { scoring } from "./score.js";
+
 const toStringBackup = Object.prototype.toString;
 
 const string = "foobar";
@@ -39,4 +41,10 @@ export function test() {
 
 export function cleanup() {
 	Object.prototype.toString = toStringBackup;
+}
+
+export function score() {
+	return [
+		scoring.POLLUTE_WITH_FUNCTION,
+	];
 }

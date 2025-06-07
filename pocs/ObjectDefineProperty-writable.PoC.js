@@ -55,3 +55,9 @@ export function test() {
 export function cleanup() {
 	delete Object.prototype.writable;
 }
+
+export function score() {
+	return [
+		// none
+	];
+}

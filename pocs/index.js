@@ -49,6 +49,7 @@ import * as ArrayPrototypeWithN from "./ArrayPrototypeWith-<n>.PoC.js";
 import * as ErrorCause from "./Error-cause.PoC.js";
 import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
 import * as FunctionPrototypeBindName from "./FunctionPrototypeBind-name.PoC.js";
+import * as isNanValueOf from "./isNan-valueOf.PoC.js";
 import * as IteratorDone from "./Iterator-done.PoC.js";
 import * as IteratorNext from "./Iterator-next.PoC.js";
 import * as IteratorReturn from "./Iterator-return.PoC.js";
@@ -168,6 +169,7 @@ export const tests = [
 	ErrorCause,
 	FunctionPrototypeApplyN,
 	FunctionPrototypeBindName,
+	isNanValueOf,
 	IteratorDone,
 	IteratorNext,
 	IteratorReturn,
