@@ -14,6 +14,7 @@ can be affected by prototype pollution.
       `[[OwnPropertyKeys]]`.
 - [ ] Similar gadgets to those for `RegExp.prototype[@@match]` and
       `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
+- [ ] Improve `./iterate` dynamic test method, run on all tested runtimes.
 
 ## Reproduce
 
@@ -29,8 +30,8 @@ The table below provides an overview of known functions affected by prototype
 pollution in the JavaScript language, or _gadgets_. This list is not exhaustive
 both in terms of affected APIs and usable properties.
 
-All gadgets were tested on Node.js v24.0.1, Deno v1.46.1, Chromium (Desktop)
-v136, and Firefox (Desktop) v138.
+All gadgets were tested on Node.js v24.0.1, Deno v2.3.1, Chromium (Desktop)
+v147, and Firefox (Desktop) v150.
 
 The "Score" is an attempt at capturing how easy it is to exploit the gadget in
 an arbitrary program, lower is easier. The contributors to the score are defined
@@ -83,9 +84,12 @@ in the gadget PoC and the scoring system is defined in [`score.js`].
 | `Array.prototype.toSorted`          | [`<n>`][o0059]                        | `1`   | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.toSpliced`         | [`<n>`][o0053]                        | `1`   | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`<n>`][o0104]                        | `1`   | Yes     | Yes            | Yes           | Yes           |
-| `Array.prototype.toString`          | [`join`][o0093]                       | `5`   | Yes     | Yes            | Yes           | Yes           |
+| `Array.prototype.toString`          | [`'join'`][o0093]                     | `5`   | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.unshift`           | [`<n>`][o0116]                        | `1`   | Yes     | Yes            | Yes           | Yes           |
 | `Array.prototype.with`              | [`<n>`][o0045]                        | `1`   | Yes     | Yes            | Yes           | Yes           |
+| `clearImmediate`                    | [`'_onImmediate'`][o0118]             | `0`   | Yes     | _Unsupported_  | _Unsupported_ | _Unsupported_ |
+| `clearInterval`                     | [`'_onTimeout'`][o0119]               | `0`   | Yes     | No             | No            | No            |
+| `clearTimeout`                      | [`'_onTimeout'`][o0120]               | `0`   | Yes     | No             | No            | No            |
 | `new Error`                         | [`'cause'`][o0079]                    | `0`   | Yes     | Yes            | Yes           | Yes           |
 | `Function.prototype.apply`          | [`<n>`][o0005]                        | `2`   | Yes     | Yes            | Yes           | Yes           |
 | `Function.prototype.bind`           | [`'name'`][o0078]                     | `0`   | No      | No             | No            | No            |
@@ -289,6 +293,9 @@ notes:
 [o0115]: ./pocs/ObjectKeys-<k>,enumerable.PoC.js
 [o0116]: ./pocs/ArrayPrototypeUnshift-<n>.PoC.js
 [o0117]: ./pocs/isNan-valueOf.PoC.js
+[o0118]: ./pocs/clearImmediate-_onImmediate.PoC.js
+[o0119]: ./pocs/clearInterval-_onTimeout.PoC.js
+[o0120]: ./pocs/clearTimeout-_onTimeout.PoC.js
 
 ## Unaffected
 

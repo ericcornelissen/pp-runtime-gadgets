@@ -46,6 +46,9 @@ import * as ArrayPrototypeToSplicedN2 from "./ArrayPrototypeToSpliced-<n>.PoC-2.
 import * as ArrayPrototypeToStringJoin from "./ArrayPrototypeToString-join.PoC.js";
 import * as ArrayPrototypeUnshiftN from "./ArrayPrototypeUnshift-<n>.PoC.js";
 import * as ArrayPrototypeWithN from "./ArrayPrototypeWith-<n>.PoC.js";
+import * as clearImmediate_onImmediate from "./clearImmediate-_onImmediate.PoC.js";
+import * as clearInterval_onTimeout from "./clearInterval-_onTimeout.PoC.js";
+import * as clearTimeout_onTimeout from "./clearTimeout-_onTimeout.PoC.js";
 import * as ErrorCause from "./Error-cause.PoC.js";
 import * as FunctionPrototypeApplyN from "./FunctionPrototypeApply-<n>.PoC.js";
 import * as FunctionPrototypeBindName from "./FunctionPrototypeBind-name.PoC.js";
@@ -166,6 +169,9 @@ export const tests = [
 	ArrayPrototypeToStringJoin,
 	ArrayPrototypeUnshiftN,
 	ArrayPrototypeWithN,
+	clearImmediate_onImmediate,
+	clearInterval_onTimeout,
+	clearTimeout_onTimeout,
 	ErrorCause,
 	FunctionPrototypeApplyN,
 	FunctionPrototypeBindName,
