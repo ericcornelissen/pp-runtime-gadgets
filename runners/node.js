@@ -2,7 +2,7 @@
 
 import { all, Outcome } from "./base.js";
 
-for (const { about, result } of all()) {
+for await (const { about, result } of all()) {
 	switch (result.outcome) {
 	case Outcome.SUCCESS:
 		console.log(

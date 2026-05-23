@@ -106,6 +106,7 @@ import * as RegExpPrototypeMatchFlags from "./RegExpPrototype@@match-flags.PoC.j
 import * as RegExpPrototypeMatchGlobal from "./RegExpPrototype@@match-global.PoC.js";
 import * as RegExpPrototypeMatchAllFlags from "./RegExpPrototype@@matchAll-flags.PoC.js";
 import * as RegExpPrototypeMatchAllLastIndex from "./RegExpPrototype@@matchAll-lastIndex.PoC.js";
+import * as ResponseJsonToJson from "./ResponseJson-toJSON.PoC.js";
 import * as SharedArrayBufferMaxByteLength from "./SharedArrayBuffer-maxByteLength.PoC.js";
 import * as SetPrototypeDifferenceHasSize from "./SetPrototypeDifference-has,size.PoC.js";
 import * as SetPrototypeIntersectionHasSize from "./SetPrototypeIntersection-has,size.PoC.js";
@@ -229,6 +230,7 @@ export const tests = [
 	RegExpPrototypeMatchGlobal,
 	RegExpPrototypeMatchAllFlags,
 	RegExpPrototypeMatchAllLastIndex,
+	ResponseJsonToJson,
 	SharedArrayBufferMaxByteLength,
 	SetPrototypeDifferenceHasSize,
 	SetPrototypeIntersectionHasSize,

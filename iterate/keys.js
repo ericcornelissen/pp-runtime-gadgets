@@ -17,13 +17,13 @@ export function asManyKeysAsPossible(obj) {
 
 	return new Set([
 		...objectKeys(obj),
-		// ...objectGetOwnPropertyNames(obj),
-		// ...objectGetOwnPropertySymbols(obj),
-		// ...objectGetOwnPropertyDescriptors(obj),
-		// ...reflectOwnKeys(obj),
+		...objectGetOwnPropertyNames(obj),
+		...objectGetOwnPropertySymbols(obj),
+		...objectGetOwnPropertyDescriptors(obj),
+		...reflectOwnKeys(obj),
 		...forIn(obj),
-		// ...objectAssign(obj),
-		// ...objectSpread(obj),
+		...objectAssign(obj),
+		...objectSpread(obj),
 	]);
 }
 
@@ -58,13 +58,21 @@ function forIn(obj) {
 }
 
 function objectAssign(obj) {
-	const target = Object.create(null);
-	const source = obj;
-	const tmp = Object.assign(target, source);
-	return Object.keys(tmp);
+	try {
+		const target = Object.create(null);
+		const source = obj;
+		const tmp = Object.assign(target, source);
+		return Object.keys(tmp);
+	} catch {
+		return [];
+	}
 }
 
 function objectSpread(obj) {
-	const tmp = { ...obj };
-	return Object.keys(tmp);
+	try {
+		const tmp = { ...obj };
+		return Object.keys(tmp);
+	} catch {
+		return [];
+	}
 }

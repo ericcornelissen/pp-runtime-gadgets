@@ -3,7 +3,7 @@
 import { all, Outcome } from "./base.js";
 
 const $results = document.getElementById("results");
-for (const { about, result } of all()) {
+for await (const { about, result } of all()) {
 	const $api = document.createElement("td");
 	if (about.link) {
 		const $link = document.createElement("a");

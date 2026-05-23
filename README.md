@@ -14,7 +14,7 @@ can be affected by prototype pollution.
       `[[OwnPropertyKeys]]`.
 - [ ] Similar gadgets to those for `RegExp.prototype[@@match]` and
       `RegExp.prototype[@@matchAll]` in other `RegExp.prototype` functions.
-- [ ] Improve `./iterate` dynamic test method, run on all tested runtimes.
+- [ ] Run `./iterate` run on all tested runtimes and go through results
 
 ## Reproduce
 
@@ -31,7 +31,7 @@ pollution in the JavaScript language, or _gadgets_. This list is not exhaustive
 both in terms of affected APIs and usable properties.
 
 All gadgets were tested on Node.js v24.0.1, Deno v2.3.1, Chromium (Desktop)
-v147, and Firefox (Desktop) v150.
+v148, and Firefox (Desktop) v151.
 
 The "Score" is an attempt at capturing how easy it is to exploit the gadget in
 an arbitrary program, lower is easier. The contributors to the score are defined
@@ -145,6 +145,7 @@ in the gadget PoC and the scoring system is defined in [`score.js`].
 |                                     | [`'global'`][o0083]                   | `2`   | No      | Yes            | No            | No            |
 | `RegExp.prototype[@@matchAll]`      | [`'flags'`][o0086]                    | `2`   | Yes     | Yes            | Yes           | Yes           |
 |                                     | [`'lastIndex'`][o0085]                | `2`   | Yes     | Yes            | Yes           | Yes           |
+| `Response.json`                     | [`'toJSON'`][o0121]                   | `3`   | Yes     | Yes            | Yes           | Yes           |
 | `new SharedArrayBuffer`             | [`'maxByteLength'`][o0019]            | `1`   | Yes     | Yes            | _Unsupported_ | _Unsupported_ |
 | `Set.prototype.difference`          | [`'has','size'`][o0063]               | `3`   | Yes     | Yes            | Yes           | Yes           |
 | `Set.prototype.intersection`        | [`'has','size'`][o0061]               | `3`   | Yes     | Yes            | Yes           | Yes           |
@@ -296,6 +297,7 @@ notes:
 [o0118]: ./pocs/clearImmediate-_onImmediate.PoC.js
 [o0119]: ./pocs/clearInterval-_onTimeout.PoC.js
 [o0120]: ./pocs/clearTimeout-_onTimeout.PoC.js
+[o0121]: ./pocs/ResponseJson-toJSON.PoC.js
 
 ## Unaffected
 

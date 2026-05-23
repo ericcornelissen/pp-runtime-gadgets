@@ -62,12 +62,12 @@ export const Outcome = Object.freeze({
  * @generator
  * @yields {TestResult} The next number in the Fibonacci sequence.
  */
-export function* all() {
+export async function* all() {
 	for (const index in tests) {
 		const testCase = tests[index];
 
 		try {
-			const [ok, message] = testCase.prerequisite();
+			const [ok, message] = await testCase.prerequisite();
 			if (!ok) {
 				yield {
 					about: testCase.about,
@@ -76,7 +76,7 @@ export function* all() {
 				continue;
 			}
 
-			const passed = testCase.test();
+			const passed = await testCase.test();
 			testCase.cleanup();
 
 			if (passed) {

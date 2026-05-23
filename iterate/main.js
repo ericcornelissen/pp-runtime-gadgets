@@ -49,9 +49,8 @@ function newProbe() {
 	};
 }
 
-const queue = [{ parent: null, subject: globalThis }];
+const queue = [{ parent: null, key: "globalThis", subject: globalThis }];
 const finished = new Set();
-const findings = [];
 while (queue.length > 0) {
 	const entry = queue.pop();
 	const { subject } = entry;
@@ -64,24 +63,36 @@ while (queue.length > 0) {
 
 	const keys = asManyKeysAsPossible(subject);
 	for (const key of keys) {
-		const value = subject[key];
-		queue.push({ parent: entry, subject: value });
+		if (globalThis.process && subject === globalThis.Storage && key === "prototype") continue;
 
-		if (typeof value === "function") {
-			const { probe, observations } = newProbe();
-			try {
-				value(probe);
-			} catch {
-				// nothing to do
-			} finally {
-				const obs = observations();
-				if (obs.length > 0) {
-					findings.push(...obs.map(observation => ({ key, ...observation, path: entry })));
+		try {
+			const value = await subject[key];
+			queue.push({ parent: entry, key, subject: value });
+
+			const path = [key];
+			let cur = { parent: entry };
+			while ((cur = cur.parent) !== null) {
+				path.push(cur.key);
+			}
+			path.reverse();
+
+			if (typeof value === "function") {
+				const { probe, observations } = newProbe();
+				try {
+					value(probe);
+				} catch {
+					// nothing to do
+				} finally {
+					for (const observation of observations()) {
+						console.debug("Observation:", {
+							path: path.join("."),
+							observation,
+						});
+					}
 				}
 			}
+		} catch (error) {
+			console.warn(error);
 		}
 	}
 }
-
-console.log(findings);
-process.exit(0);
